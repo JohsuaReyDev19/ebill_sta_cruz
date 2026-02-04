@@ -1,0 +1,4 @@
+menu = {
+    "Americano": 100,
+    
+}
