@@ -106,13 +106,7 @@
                                                         <form method="POST" id="newAccountForm">
 	                                                        <input type="hidden" name="concessionaires_id" value="<?php echo $concessionaires_id; ?>" required>
 
-	                                                        <div class="form-group mb-3">
-									                            <label class="control-label modal-label" for="account_no">Account No</label>
-									                            <input class="form-control form-control-sm" id="account_no" name="account_no" type="text" required readonly>
-									                            <div class="invalid-feedback">
-									                                Please input a valid account no.
-									                            </div>
-									                        </div>
+	                                                        
 
 									                        <!-- Account Type -->
 									                        <div class="form-group mb-3">
@@ -245,6 +239,15 @@
 
 									                            <div class="invalid-feedback">Please select zone/book.</div>
 									                        </div>
+
+															<div class="form-group mb-3">
+									                            <label class="control-label modal-label" for="account_no">Account No</label>
+									                            <input class="form-control form-control-sm" id="account_no" name="account_no" type="text"  readonly >
+									                            <div class="invalid-feedback">
+									                                Please input a valid account no.
+									                            </div>
+									                        </div>
+															
 									                        <!-- Date Applied -->
 									                        <div class="form-group mb-3">
 									                            <label class="control-label modal-label">Date Applied</label>
@@ -349,6 +352,35 @@
 		        }
 		    });
 		});
+
+		function updateAccountNo() {
+		const zonebook = $('#zonebook').val();
+		const meter_size = $('#meter_size').val();
+
+		if (!zonebook || !meter_size || zonebook === '0') return;
+
+		$.ajax({
+			url: 'action/generate_account_no.php',
+			type: 'POST',
+			data: { zonebook_id: zonebook, meter_size_id: meter_size },
+			dataType: 'json',
+			success: function(res) {
+				if (res.status === 'success') {
+					$('#account_no').val(res.account_no);
+				} else {
+					Swal.fire('Error', res.message, 'error');
+				}
+			},
+			error: function() {
+				Swal.fire('Error', 'Failed to generate account number.', 'error');
+			}
+		});
+	}
+
+	// Trigger when Zone/Book or Meter Size changes
+	$('#zonebook, #meter_size').on('change', updateAccountNo);
+
+
 	</script>
 </body>
 

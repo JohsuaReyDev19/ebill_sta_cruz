@@ -129,9 +129,9 @@
 																</button>
 
 																<ul class="dropdown-menu w-100" aria-labelledby="userStatusControls">
-																<li><a id="showViewAll" class="dropdown-item" href="#">View All</a></li>
-																<li><a id="showUnbilled" class="dropdown-item" href="#">Show Unbilled</a></li>
-																<li><a id="generateBtn" class="dropdown-item" href="#">Show Billed</a></li>
+																<li><a id="showViewAll" class="dropdown-item" href="#">Display All</a></li>
+																<li><a id="showUnbilled" class="dropdown-item" href="#">Unbilled Concessioneres</a></li>
+																<li><a id="generateBtn" class="dropdown-item" href="#">Billed Concessionaires</a></li>
 
 																<!-- Date Nested Dropdown -->
 																<li class="dropend">
@@ -182,10 +182,11 @@
 																</button>
 
 																<ul class="dropdown-menu w-100" aria-labelledby="userStatusControls">
-																<li><a id="printReportsBtn" href="#" class="dropdown-item">Print Reports</a></li>
+																<li><a id="printReportsBtn" href="#" class="dropdown-item">Daily Billing Report</a></li>
 																<li><a id="printNoticeBtn" class="dropdown-item" >Billing Notice</a></li>
-																<li><a id="printAllTableBtn" class="dropdown-item" href="#">Daily Billing Report</a></li>
-																<li><a id="printUnbilledBtn" class="dropdown-item" href="#">Print unbilled</a></li>
+																<li><a id="printAllTableBtn" class="dropdown-item" href="#">Billed Concessionaire</a></li>
+																<li><a id="printUnbilledBtn" class="dropdown-item" href="#">Unbilled Concessionaire</a></li>
+																<li><a id="#" class="dropdown-item" href="#">Summary of Collection</a></li>
 																</ul>
 															</div>
 														</div>
