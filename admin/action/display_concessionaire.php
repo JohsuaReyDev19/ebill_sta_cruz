@@ -60,15 +60,48 @@ while ($row = mysqli_fetch_assoc($result)) {
         'address' => $row['billing_address'],
         'contact_info' => $row['contact_no'],
         'accounts_info' => $row['accounts_info'] ?: 'No Accounts',
-        'action' => '<a href="edit-concessionaires.php?title=Edit Concessionaire&id=' . urlencode($encryptedData) . '" class="btn btn-sm btn-primary shadow-sm"><i class="fa-solid fa-user-pen"></i> Profile</a>
-                    <a href="edit-concessionaires-accounts.php?title=Accounts&id=' . urlencode($encryptedData) . '" class="btn btn-sm btn-success shadow-sm"><i class="fa-solid fa-gauge"></i> Accounts</a>
-                    <a href="#" class="btn btn-sm btn-danger shadow-sm delete-concessionaire-btn"
-                        data-concessionaire-id="' . $encryptedData . '" 
-                        data-concessionaire-name="' . htmlspecialchars($row['full_name']) . '"
-                        data-concessionaire-address="' . htmlspecialchars($row['billing_address']) . '">
-                        <i class="fa-solid fa-trash"></i>
-                    </a>
-                    '
+        'action' => '
+<div class="d-flex flex-column flex-md-row gap-2">
+
+    <a href="edit-concessionaires.php?title=Edit Concessionaire&id=' . urlencode($encryptedData) . '" 
+       class="btn btn-sm btn-primary px-2 py-1">
+        <i class="fa-solid fa-user-pen"></i>
+        <span class="d-none d-md-inline"> Profile</span>
+    </a>
+
+    <a href="edit-concessionaires-accounts.php?title=Accounts&id=' . urlencode($encryptedData) . '" 
+       class="btn btn-sm btn-success px-2 py-1 ml-1">
+        <i class="fa-solid fa-gauge"></i>
+        <span class="d-none d-md-inline"> Accounts</span>
+    </a>
+
+    <div class="dropdown ml-1">
+        <button class="btn btn-sm btn-outline-secondary dropdown-toggle status-btn px-2 py-1"
+            type="button"
+            data-toggle="dropdown">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-check-big-icon lucide-square-check-big"><path d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"/><path d="m9 11 3 3L22 4"/></svg> Active
+        </button>
+
+        <div class="dropdown-menu">
+            <a class="dropdown-item update-status"
+               href="#"
+               data-id="' . $encryptedData . '"
+               data-status="Temporary Disconnected">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-alert-icon lucide-badge-alert"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>Temporary
+            </a>
+            <a class="dropdown-item update-status"
+               href="#"
+               data-id="' . $encryptedData . '"
+               data-status="Disconnected">
+               Disconnected
+            </a>
+        </div>
+    </div>
+
+</div>
+'
+
+
     ];
 }
 

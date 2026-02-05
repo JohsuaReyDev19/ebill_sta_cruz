@@ -177,6 +177,45 @@
         });
     </script>
 
+    <script>
+        $(document).on('click', '.update-status', function (e) {
+    e.preventDefault();
+
+    let id = $(this).data('id');
+    let selectedStatus = $(this).data('status');
+
+    // 🔁 Change button text immediately
+    $(this).closest('.dropdown')
+           .find('.status-btn')
+           .text(selectedStatus);
+
+    Swal.fire({
+        title: 'Confirm Status Change',
+        text: 'Set concessionaire status to "' + selectedStatus + '"?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, update'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'action/update_concessionaire_status.php',
+                type: 'POST',
+                data: {
+                    concessionaire_id: id,
+                    status: selectedStatus
+                },
+                success: function (response) {
+                    if (response.trim() !== 'success') {
+                        Swal.fire('Error', 'Update failed', 'error');
+                    }
+                }
+            });
+        }
+    });
+});
+
+    </script>
+
 </body>
 
 </html>

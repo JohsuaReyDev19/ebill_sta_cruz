@@ -234,7 +234,7 @@ $price_matrix_result = $con->query(
                                             <?php if($price_matrix_result->num_rows > 0): ?>
                                                 <?php $count = 1; ?>
                                                 <?php while($row = $price_matrix_result->fetch_assoc()): ?>
-                                                    <tr class="text-center" style="font-size: small;">
+                                                    <tr class="text-center" style="font-size: small; color: black;">
                                                         <td><?= $count++; ?></td>
                                                         <td><?= htmlspecialchars($row['classification']); ?></td>
                                                         <td><?= number_format($row['minimum_price'], 2); ?></td>

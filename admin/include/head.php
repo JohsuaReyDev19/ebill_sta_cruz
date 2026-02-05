@@ -95,6 +95,15 @@ checkSession();
     #consTable{
         color: black;
     }
+
+    .table-responsive {
+    overflow-x: auto;
+}
+
+table.dataTable {
+    width: 100% !important;
+}
+
 </style>
 
 

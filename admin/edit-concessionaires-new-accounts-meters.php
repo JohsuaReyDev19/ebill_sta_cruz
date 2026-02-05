@@ -108,7 +108,7 @@
 
 	                                                        <div class="form-group mb-3">
 									                            <label class="control-label modal-label" for="account_no">Account No</label>
-									                            <input class="form-control form-control-sm" id="account_no" name="account_no" type="text" required>
+									                            <input class="form-control form-control-sm" id="account_no" name="account_no" type="text" required readonly>
 									                            <div class="invalid-feedback">
 									                                Please input a valid account no.
 									                            </div>
@@ -350,7 +350,6 @@
 		    });
 		});
 	</script>
-
 </body>
 
 </html>

@@ -183,8 +183,8 @@
 
 																<ul class="dropdown-menu w-100" aria-labelledby="userStatusControls">
 																<li><a id="printReportsBtn" href="#" class="dropdown-item">Print Reports</a></li>
-																<li><a id="printNoticeBtn" class="dropdown-item" >Print Notice</a></li>
-																<li><a id="printAllTableBtn" class="dropdown-item" href="#">Print billing reports</a></li>
+																<li><a id="printNoticeBtn" class="dropdown-item" >Billing Notice</a></li>
+																<li><a id="printAllTableBtn" class="dropdown-item" href="#">Daily Billing Report</a></li>
 																<li><a id="printUnbilledBtn" class="dropdown-item" href="#">Print unbilled</a></li>
 																</ul>
 															</div>
