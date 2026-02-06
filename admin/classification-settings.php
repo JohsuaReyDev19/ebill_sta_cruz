@@ -23,11 +23,11 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-primary"><i class="fa-solid fa-i-cursor fa-sm mr-2"></i>Classification Settings</h1>
                     </div>
 
-                    <hr>
+                    <hr> -->
 
                     <!-- Content Row -->
                     <div class="row">

@@ -65,6 +65,24 @@
                                 }elseif($title == "Other Price Rate"){
                                     echo '<i class="fa-solid fa-gauge mr-2"></i>';
                                     echo $title;
+                                }elseif($title == "Manage Price Matrix"){
+                                    echo '<i class="fa-solid fa-gauge mr-2"></i>';
+                                    echo $title;
+                                }elseif($title == "System Settings"){
+                                    echo '<i class="fa-solid fa-gauge mr-2"></i>';
+                                    echo $title;
+                                }elseif($title == "Zone/Book"){
+                                    echo '<i class="fa-solid fa-gauge mr-2"></i>';
+                                    echo $title;
+                                }elseif($title == "Classification"){
+                                    echo '<i class="fa-solid fa-gauge mr-2"></i>';
+                                    echo $title;
+                                }elseif($title == "Account Type Settings"){
+                                    echo '<i class="fa-solid fa-gauge mr-2"></i>';
+                                    echo $title;
+                                }elseif($title == "Meter Size"){
+                                    echo '<i class="fa-solid fa-gauge mr-2"></i>';
+                                    echo $title;
                                 }
 
 

@@ -35,9 +35,9 @@
                                class="form-control"
                                placeholder="Enter rate amount"
                                required>
-                        <small class="text-muted">
+                        <!-- <small class="text-muted">
                             Example: 10.00 or 15.50
-                        </small>
+                        </small> -->
                     </div>
 
                 </div>

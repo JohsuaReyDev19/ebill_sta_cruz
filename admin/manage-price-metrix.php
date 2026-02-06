@@ -174,9 +174,9 @@ $price_matrix_result = $con->query(
             <?php include './include/topbar.php'; ?>
 
             <div class="container-fluid">
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-primary"><i class="fa-solid fa-tags fa-sm mr-2"></i>Manage Price Matrix</h1>
-                </div>
+                </div> -->
 
                 <?php if(isset($_SESSION['flash_success'])): ?>
                     <div class="alert alert-success" id="flashMessage">
@@ -189,8 +189,6 @@ $price_matrix_result = $con->query(
                     </div>
                     <?php unset($_SESSION['flash_error']); ?>
                 <?php endif; ?>
-
-
 
                 <div class="row">
                     <div class="col-xl-12 col-lg-12">
@@ -220,8 +218,8 @@ $price_matrix_result = $con->query(
                                                 <th colspan="6" class="text-center">Commodity Charges</th>
                                                 <th rowspan="2" class="text-center align-middle">Action</th>
                                             </tr>
-                                            <tr style="font-size: 10px;">
-                                                <th class="text-center">0-10</th>
+                                            <tr style="font-size: 8px; color: black;">
+                                                <th class="text-center">1-10</th>
                                                 <th class="text-center">11-20</th>
                                                 <th class="text-center">21-30</th>
                                                 <th class="text-center">31-40</th>

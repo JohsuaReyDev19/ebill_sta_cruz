@@ -186,12 +186,11 @@
 																<li><a id="printNoticeBtn" class="dropdown-item" >Billing Notice</a></li>
 																<li><a id="printAllTableBtn" class="dropdown-item" href="#">Billed Concessionaire</a></li>
 																<li><a id="printUnbilledBtn" class="dropdown-item" href="#">Unbilled Concessionaire</a></li>
-																<li><a id="#" class="dropdown-item" href="#">Summary of Collection</a></li>
+																<li><a id="#" class="dropdown-item" href="showAll.php">Summary of Collection</a></li>
 																</ul>
 															</div>
 														</div>
 														
-
 														<!-- Clear -->
 														<div class="col-lg-2 col-md-4 col-sm-6 col-12 d-flex justify-content-center mb-2">
 															<a class="btn btn-primary btn-sm w-100 w-md-auto"
