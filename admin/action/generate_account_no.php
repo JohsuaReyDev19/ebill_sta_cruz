@@ -20,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $meterRow = mysqli_fetch_assoc($meterQuery);
         $meterCode = str_pad($meterRow['meter_size'], 2, '0', STR_PAD_LEFT);
 
+        $meterNo =  $meterCode; 
         // Special handling for fractional sizes
         if ($meterCode == "1/2") {
             $meterCode = "12";
@@ -27,6 +28,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $meterCode = "112";
         } elseif ($meterCode == "2 1/2") {
             $meterCode = "212";
+        }elseif($meterCode == "3 1/2"){
+            $meterCode ="312";
+        }elseif($meterCode == "4 1/2"){
+            $meterCode = "412";
+        }else{
+            $meterCode = $meterNo;
         }
 
         $likePattern = "$zoneCode-$meterCode-%";

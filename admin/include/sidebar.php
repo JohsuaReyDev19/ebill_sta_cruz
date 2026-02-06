@@ -121,13 +121,14 @@
                         <a class="collapse-item" href="zonebook-settings.php">Zone/Book</a>
                         <a class="collapse-item" href="classification-settings.php">Classification</a>
                         <a class="collapse-item" href="account-type-settings.php">Account Type</a>
-                        <a class="collapse-item" href="#">Barangay</a>
+                        <a class="collapse-item" href="#">Manage Barangay's</a>
                         <!-- <a class="collapse-item" href="service-status-settings.php">Service Status</a> -->
                         <a class="collapse-item" href="meter-brand-settings.php">Meter Brand</a>
                         <a class="collapse-item" href="meter-size-settings.php">Meter Size</a>
                         <a class="collapse-item" href="billing-schedule-settings.php">Billing Schedule</a>
                         <a class="collapse-item" href="price-matrix-settings.php">Price Matrix</a>
                         <a class="collapse-item" href="manage-price-metrix.php">Manage Price Matrix</a>
+                        <a class="collapse-item" href="other-price-matrix.php?title=Other Price Rate">Other Price Matrix</a>
                         <a class="collapse-item" href="system-settings.php">System Settings</a>
                     </div>
                 </div>

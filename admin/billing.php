@@ -134,7 +134,7 @@
 																<li><a id="generateBtn" class="dropdown-item" href="#">Billed Concessionaires</a></li>
 
 																<!-- Date Nested Dropdown -->
-																<li class="dropend">
+																<!-- <li class="dropend">
 																	<a class="dropdown-item dropdown-toggle" href="#" id="dateDropdown" data-bs-toggle="dropdown" aria-expanded="false">
 																	Reading Date
 																	</a>
@@ -151,7 +151,7 @@
 																		<button class="btn btn-primary btn-sm w-100" id="applyDateFilter">Filter</button>
 																	</li>
 																	</ul>
-																</li>
+																</li> -->
 																</ul>
 															</div>
 														</div>
@@ -256,6 +256,13 @@
 						        <div class="card">
 						            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 										<span>Reading Sheet</span>
+										<div class="d-flex justify-content-between align-items-center">
+											<label for="myDateFrom" class="form-label">From</label>
+											<input type="date" id="myDateFrom" class="form-control form-control-sm ml-2">
+											<label for="myDateTo" class="form-label ml-2">To</label>
+											<input type="date" id="myDateTo" class="form-control form-control-sm ml-2">
+											<button class="btn btn-success btn-sm w-100 ml-2" id="applyDateFilter">Filter</button>
+										</div>
 									</div>
 
 						            <div class="card-body">

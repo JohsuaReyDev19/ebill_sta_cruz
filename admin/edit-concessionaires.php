@@ -87,6 +87,7 @@
                                 $middle_name = $row['middle_name'];
                                 $suffix_name = $row['suffix_name'];
                                 $gender = $row['gender'];
+                                $discount = $row['discount'];
 
                                 $institution_name = $institution_description = "";
                             }

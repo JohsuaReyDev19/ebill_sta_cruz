@@ -117,6 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $middle_name = isset($_POST['middle_name']) ? mysqli_real_escape_string($con, $_POST['middle_name']) : '';
         $suffix_name = isset($_POST['suffix_name']) ? mysqli_real_escape_string($con, $_POST['suffix_name']) : '';
         $gender = isset($_POST['gender']) ? mysqli_real_escape_string($con, $_POST['gender']) : '';
+        $discount = isset($_POST['discount']) ? mysqli_real_escape_string($con, $_POST['discount']) : '';
 
         $sql = "UPDATE concessionaires SET
                     last_name = '$last_name',
@@ -124,6 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     middle_name = '$middle_name',
                     suffix_name = '$suffix_name',
                     gender = '$gender',
+                    discount = '$discount',
                     institution_name = '',
                     institution_description = '',
                     is_institution = 0,
