@@ -294,7 +294,6 @@
 						    </div>
                         </div>
 
-
                 </div>
                 <!-- /.container-fluid -->
 
@@ -345,7 +344,6 @@
 		                dataType: 'json',
 		                success: function (response) {
 		                    if (response.success) {
-		                        // Populate the spans with the retrieved data
 		                        $('#readingDate').text(response.data.reading_date);
 		                        $('#coveredFrom').text(response.data.date_covered_from);
 		                        $('#coveredTo').text(response.data.date_covered_to);

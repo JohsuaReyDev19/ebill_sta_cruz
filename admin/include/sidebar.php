@@ -72,21 +72,13 @@
                 </a>
             </li> -->
 
+            
+
             <li class="nav-item">
-                <a class="nav-link collapsed fs-4" href="#" data-toggle="collapse" data-target="#collectionCollapse"
-                    aria-expanded="true" aria-controls="billingCollapse">
+                <a class="nav-link collapsed fs-4" href="collecting.php?title=Collecting System">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-toolbox-icon lucide-toolbox"><path d="M16 12v4"/><path d="M16 6a2 2 0 0 1 1.414.586l4 4A2 2 0 0 1 22 12v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 .586-1.414l4-4A2 2 0 0 1 8 6z"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M2 14h20"/><path d="M8 12v4"/></svg>
                     <span>Collecting</span>
                 </a>
-                <div id="collectionCollapse" class="collapse" aria-labelledby=""
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Collecting</h6>
-                        <a class="collapse-item" href="collecting.php?title=Collecting System">Collection</a>
-                        <!-- <a class="collapse-item" href="summaryOfCollection.php?title=Summary of Collection">Summary of Collection</a> -->
-
-                    </div>
-                </div>
             </li>
 
             <li class="nav-item">

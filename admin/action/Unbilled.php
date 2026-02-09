@@ -68,6 +68,7 @@ $(document).ready(function () {
 
                     console.log(formattedDate);
                     response.data.forEach((item) => {
+                        
                         let previousReading = item.previous_reading !== null ? item.previous_reading : 'N/A';
                         let consumedVal;
 

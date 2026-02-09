@@ -458,11 +458,14 @@ $price_matrix_result = $con->query(
 
 <script>
 $(document).ready(function() {
-    $('.edit-btn').on('click', function() {
+
+    // Use delegated event (important for dynamic rows like DataTables)
+    $(document).on('click', '.edit-btn', function() {
+
         const id = $(this).data('id');
-        const classification = $(this).data('classification');
+        const classification = ($(this).data('classification') || '').toString().trim();
         const minimum = $(this).data('minimum');
-        const metersize = $(this).data('metersize');
+        const metersize = ($(this).data('metersize') || '').toString().trim();
         const charge0 = $(this).data('charge0');
         const charge1 = $(this).data('charge1');
         const charge2 = $(this).data('charge2');
@@ -470,7 +473,7 @@ $(document).ready(function() {
         const charge4 = $(this).data('charge4');
         const charge5 = $(this).data('charge5');
 
-        // Set values
+        // Set basic values
         $('#edit_price_matrix_id').val(id);
         $('#edit_minimum_price').val(minimum);
         $('#edit_charge_0').val(charge0);
@@ -480,28 +483,48 @@ $(document).ready(function() {
         $('#edit_charge_4').val(charge4);
         $('#edit_charge_5').val(charge5);
 
-        // Select Classification by text
-        $('#edit_classification_id option').filter(function() {
-            return $(this).text() === classification;
-        }).prop('selected', true);
+        // Safer classification matching (trim + case insensitive)
+        $('#edit_classification_id option').each(function() {
+            if ($(this).text().trim().toLowerCase() === classification.toLowerCase()) {
+                $(this).prop('selected', true);
+            }
+        });
 
-        // For Meter Size & Brand: split the meter_size (e.g. "10mm BrandX")
-        const parts = metersize.split(' ');
-        const sizePart = parts.slice(0, parts.length-1).join(' '); // size
-        const brandPart = parts[parts.length-1]; // brand
+        // Better meter size + brand handling
+        if (metersize !== '') {
 
-        $('#edit_meter_size_id option').filter(function() {
-            return $(this).text() === sizePart;
-        }).prop('selected', true);
+            // Example: "10mm BrandX"
+            const lastSpaceIndex = metersize.lastIndexOf(" ");
 
-        $('#edit_meter_brand_id option').filter(function() {
-            return $(this).text() === brandPart;
-        }).prop('selected', true);
+            let sizePart = metersize;
+            let brandPart = "";
+
+            if (lastSpaceIndex !== -1) {
+                sizePart = metersize.substring(0, lastSpaceIndex).trim();
+                brandPart = metersize.substring(lastSpaceIndex + 1).trim();
+            }
+
+            // Match size
+            $('#edit_meter_size_id option').each(function() {
+                if ($(this).text().trim().toLowerCase() === sizePart.toLowerCase()) {
+                    $(this).prop('selected', true);
+                }
+            });
+
+            // Match brand
+            $('#edit_meter_brand_id option').each(function() {
+                if ($(this).text().trim().toLowerCase() === brandPart.toLowerCase()) {
+                    $(this).prop('selected', true);
+                }
+            });
+        }
 
         $('#editModal').modal('show');
     });
+
 });
 </script>
+
 
 
 <script>
