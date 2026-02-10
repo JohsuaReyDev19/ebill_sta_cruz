@@ -84,8 +84,9 @@
                                                     <th scope="col">Account Type</th>                                        
                                                     <th scope="col">Meter No</th>                                         
                                                     <th scope="col">Meter</th>                                         
-                                                    <th scope="col">Classification</th>                         
-                                                    <th scope="col">Action</th>                         
+                                                    <th scope="col">Classification</th>   
+                                                    <th scope="col">status</th>                      
+                                                    <th scope="col" style="text-align: center   ;">Action</th>                         
                                                 </tr>
                                             </thead>
                                             
@@ -97,7 +98,7 @@
                                                 require '../config.php';
 
                                                 $display_account = "
-                                                                        SELECT mt.* , act.account_type, cst.classification, mst.meter_size, mbs.meter_brand, zs.zonebook
+                                                                        SELECT mt.* , act.account_type, cst.classification, mst.meter_size, mbs.meter_brand, zs.zonebook, service_status_id
                                                                         FROM `meters` mt
                                                                         INNER JOIN `account_type_settings` act ON act.account_type_id = mt.account_type_id
                                                                         INNER JOIN `classification_settings` cst ON cst.classification_id = mt.classification_id
@@ -120,6 +121,7 @@
                                                     $meter_size_id_selected = $row['meter_size_id'];
                                                     $meter_brand_id_selected = $row['meter_brand_id'];
                                                     $zonebook_id_selected = $row['zonebook_id'];
+                                                    $status = $row['service_status_id'];
                                                     $date_applied = $row['date_applied'];
 
                                                     $account_type = $row['account_type'];
@@ -138,15 +140,27 @@
                                                     <td><?= htmlspecialchars($meter_no); ?></td>
                                                     <td><?= htmlspecialchars($meter_brand) . " " . formatFractionString($meter_size); ?></td>
                                                     <td><?= htmlspecialchars($classification); ?></td>
+                                                    <td style="text-align: center;">
+                                                        <?php 
+                                                            $stats = htmlspecialchars($status); 
+                                                            if($stats == "0"){
+                                                                echo '<span style="background-color: green; color: white; padding: 5px; border-radius: 10px;">Active</span>';
+                                                            }elseif($stats == "1"){
+                                                                echo '<span style="background-color: red; color: white; padding: 5px; border-radius: 10px;">Disconnected</span>';
+                                                            }else{
+                                                                echo '<span style="background-color: orange; color: white; padding: 5px; border-radius: 10px;">Temporary Disconnected</span>';
+                                                            }
+                                                        ?>
+                                                    </td>
                                                     <td class="text-center">
                                                         <a class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#edit_<?php echo $meters_id; ?>"><i class="fa-solid fa-edit"></i> Edit Account</a>
                                                         <a href="edit-concessionaires-accounts-change-meters.php?title=Account Meter Info&concessionaire_id=<?php echo urlencode($_GET['id']); ?>&meters_id=<?php echo urlencode($encryptedData); ?>" class="btn btn-sm btn-success shadow-sm"><i class="fa-solid fa-gauge-simple"></i> Change Meter</a>
-                                                        <a href="#" class="btn btn-sm btn-danger shadow-sm delete-account-btn"
-                                                           data-account-id="<?php echo $meters_id; ?>"
-                                                           data-account-name="<?php echo htmlspecialchars($full_name); ?>"
-                                                           data-account-no="<?php echo htmlspecialchars($account_no); ?>">
-                                                           <i class="fa-solid fa-trash"></i>
-                                                        </a>
+                                                        <button class="btn btn-sm btn-warning shadow-sm change-status-btn"
+                                                            data-meter-id="<?php echo $meters_id; ?>"
+                                                            data-meter-name="<?php echo htmlspecialchars($full_name); ?>">
+                                                            Change Status
+                                                        </button>
+                                                        
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -303,67 +317,58 @@
         });
     </script>
 
-    <!-- Delete Classification Status -->
     <script>
-        $(document).ready(function() {
-            // Function for deleting event
-            $('.delete-classification-btn').on('click', function(e) {
-                e.preventDefault();
+        document.addEventListener("click", function(e) {
 
-                var deleteButton = $(this);
-                var classificationID = deleteButton.data('classification-id');
-                var classificationName = decodeURIComponent(deleteButton.data('classification-name'));
-                var classificationRemarks = decodeURIComponent(deleteButton.data('classification-remarks'));
+            if (e.target.classList.contains("change-status-btn")) {
+
+                let meterId = e.target.dataset.meterId;
+                let meterName = e.target.dataset.meterName;
 
                 Swal.fire({
-                    title: 'Delete Classification',
-                    html: "You are about to delete the following classification:<br><br>" +
-                          "<strong>Classification:</strong> " + classificationName + "<br>" +
-                          "<strong>Classification Remarks:</strong> " + classificationRemarks + "<br>",
-                    icon: 'warning',
+                    title: `Change Status for ${meterName}`,
+                    input: 'select',
+                    inputOptions: {
+                        0: 'Active / re-connection',
+                        1: 'Disconnected',
+                        2: 'Temporary Disconnected'
+                    },
+                    inputPlaceholder: 'Select a status',
                     showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes, delete!'
+                    confirmButtonText: 'Update',
+                    cancelButtonText: 'Cancel',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $.ajax({
-                            url: 'action/delete_classification.php',
-                            type: 'POST',
-                            data: {
-                                classification_id: classificationID
+
+                        let status = result.value;
+
+                        fetch("action/delete-account.php", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
                             },
-                            success: function(response) {
-                                if (response.trim() === 'success') {
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'Classification has been deleted.',
-                                        'success'
-                                    ).then(() => {
-                                        location.reload();
-                                    });
-                                } else {
-                                    Swal.fire(
-                                        'Error!',
-                                        'Failed to delete classification.',
-                                        'error'
-                                    );
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                                Swal.fire(
-                                    'Error!',
-                                    'Failed to delete classification.',
-                                    'error'
-                                );
+                            body: "meters_id=" + meterId + "&status=" + status
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                Swal.fire('Updated!', 'Service status updated.', 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('No changes!', data.message, 'warning');
                             }
+                        })
+                        .catch(error => {
+                            Swal.fire('Error!', 'Something went wrong.', 'error');
+                            console.error(error);
                         });
+
                     }
                 });
-            });
+            }
         });
-    </script>
+        </script>
+
 
     <!-- Edit Account -->
     <script>
