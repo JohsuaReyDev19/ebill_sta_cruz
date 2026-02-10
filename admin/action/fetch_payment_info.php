@@ -22,6 +22,7 @@ $query = $con->prepare("
         mrt.consumed, 
         mst.account_no, 
         CONCAT(cst.first_name, ' ', cst.last_name) AS account_name, 
+        cst.discount,
         ssst.service_status, 
         acst.account_type, 
         csst.classification, 
@@ -103,28 +104,51 @@ $charge_51_up = floatval($row['charge_51_up'] ?? 0);
 
 if ($consumed <= 10) {
 
-    $amount = $price;
+    $amountDue = $price;
 
 } elseif ($consumed >= 11 && $consumed <= 20) {
 
-    $amount = $price + (($consumed - 10) * $charge_11_20);
+    $amountDue = $price + (($consumed - 10) * $charge_11_20);
 
 } elseif ($consumed >= 21 && $consumed <= 30) {
 
-    $amount = $price +  (($consumed - 10) * $charge_21_30);
+    $amountDue = $price +  (($consumed - 10) * $charge_21_30);
 
 } elseif ($consumed >= 31 && $consumed <= 40) {
 
-    $amount = $price + (($consumed - 10) * $charge_31_40);
+    $amountDue = $price + (($consumed - 10) * $charge_31_40);
 
 } elseif ($consumed >= 41 && $consumed <= 50) {
 
-    $amount = $price + (($consumed - 10) * $charge_41_50);
+    $amountDue = $price + (($consumed - 10) * $charge_41_50);
 
 } else {
 
-    $amount = $price + (($consumed - 10) * $charge_51_up);
+    $amountDue = $price + (($consumed - 10) * $charge_51_up);
 }
+
+
+        $amount = $amountDue; 
+        $discountRate = 0;
+        $discountAmount = 0;
+        $finalAmount = $amount;
+        $discount = "";
+        if (!empty($row['discount'])) {
+
+            $stmtRate = $con->prepare("SELECT rate FROM rates WHERE description = ?");
+            $stmtRate->bind_param("s", $row['discount']);
+            $stmtRate->execute();
+            $resultRate = $stmtRate->get_result();
+
+            if ($resultRate->num_rows > 0) {
+                $rateRow = $resultRate->fetch_assoc();
+                $discountRate = (float)$rateRow['rate'];
+                $discount = $discountRate;
+                $discountAmount = $amount * $discountRate;
+                
+                $finalAmount = $amount - $discountAmount;
+            }
+        }
 
 
 // Prepare JSON response
@@ -144,7 +168,9 @@ $response = [
             "description" => $row['description'],
             "date_due" => date("F d, Y", strtotime($row['date_due'])),
             "consumed" => number_format($consumed, 2),
-            "amount" => number_format($amount, 2, '.', ''),
+            "totalAmount" => number_format($amountDue, 2, '.', ''), // 
+            "discountAmount" => number_format($discountAmount, 2, '.', ''), //
+            "amount" => number_format($finalAmount, 2, '.', ''),
             "amount_paid" => number_format($row['amount_paid'] ?? 0, 2, '.', ''),
             "amount_change" => number_format($row['amount_change'] ?? 0, 2, '.', ''),
             "payment_date" => $row['payment_date']

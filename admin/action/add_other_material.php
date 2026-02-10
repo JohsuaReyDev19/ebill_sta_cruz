@@ -18,9 +18,17 @@ if (
 
     // Build remarks with optional user remarks + material + unit info
     $remarks_input = trim($_POST['remarks'] ?? '');
-	$remarks = $remarks_input !== ''
-    ? mysqli_real_escape_string($con, $remarks_input) . " ($units_included in $quantity $units)"
-    : "$units_included in $quantity $units";
+
+    $is_status_charge = stripos($remarks_input, 'Charge') !== false;
+
+    if ($is_status_charge) {
+        $remarks = mysqli_real_escape_string($con, $remarks_input);
+    } else {
+        $remarks = $remarks_input !== ''
+            ? mysqli_real_escape_string($con, $remarks_input) . " ($units_included in $quantity $units)"
+            : "$units_included in $quantity $units";
+    }
+
 
     $insert_sql = "INSERT INTO other_billing (
         meters_id,
@@ -39,7 +47,7 @@ if (
         '$quantity',
         '$amount_due',
         '$remarks',
-        'Additional material: $units_included',
+        'Additional material $units_included',
         '$billing_date',
         0
     )";

@@ -71,8 +71,8 @@
                     </select>
                 </div>
                 <div class="form-group mb-2">
-                    <label class="form-label" id="addCons">For Discount</label>
-                    <select class="form-control custom-select" name="discount" required id="inputFields">
+                    <label class="form-label" id="addCons">For Discount -- optional --</label>
+                    <select class="form-control custom-select" name="discount" id="inputFields">
                         <option value="" selected>-- select discount --</option>
                         <option value="Pwd">Pwd</option>
                         <option value="Senior">Senior</option>

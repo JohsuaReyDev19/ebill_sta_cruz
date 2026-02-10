@@ -15,6 +15,7 @@ $query = $con->prepare("
             ELSE 'Disconnected'
         END AS service_status,
         CONCAT(cst.first_name, ' ', cst.last_name) AS account_name,
+        cst.discount,
         acst.account_type, 
         csst.classification, 
         bst.barangay,
@@ -132,6 +133,31 @@ if ($result->num_rows > 0) {
             $amountDue = $price + (($consumed - $charge_0) * $charge_51_up);
         }
 
+        $amount = $amountDue; 
+        $discountRate = 0;
+        $discountAmount = 0;
+        $finalAmount = $amount;
+
+        if (!empty($row['discount'])) {
+
+            $stmtRate = $con->prepare("SELECT rate FROM rates WHERE description = ?");
+            $stmtRate->bind_param("s", $row['discount']);
+            $stmtRate->execute();
+            $resultRate = $stmtRate->get_result();
+
+            if ($resultRate->num_rows > 0) {
+                $rateRow = $resultRate->fetch_assoc();
+                $discountRate = (float)$rateRow['rate'];
+
+                $discountAmount = $amount * $discountRate;
+
+                $finalAmount = $amount - $discountAmount;
+            }
+        }
+
+
+        
+
 
         // Determine if the bill has been collected
         $is_collected = $row['collection_count'] > 0;
@@ -146,7 +172,7 @@ if ($result->num_rows > 0) {
     "description"     => $row['description'],
     "date_due"        => date("F d, Y", strtotime($row['date_due'])),
     "consumed"        => number_format($consumed, 2),
-    "amount"          => number_format($amountDue, 2, '.', ''),
+    "amount"          => number_format($finalAmount, 2, '.', ''),
     "button"          => $button
 ];
 

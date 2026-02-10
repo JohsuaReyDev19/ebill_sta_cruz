@@ -72,6 +72,9 @@
                          <!-- Edit Rate Modal -->
 
                     </div>
+
+
+
                     
                 </div>
                 <!-- /.container-fluid -->
@@ -98,6 +101,39 @@
     <?php include './include/logout_modal.php'; ?>
 
     <?php include './include/script.php'; ?>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const checkboxes = document.querySelectorAll('.charge-checkbox');
+    const totalDisplay = document.getElementById('totalCharge');
+
+    function calculateTotal() {
+        let total = 0;
+
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                let value = parseFloat(checkbox.value);
+
+                // If discount (0.20), subtract 20%
+                if (checkbox.id === "pwd" || checkbox.id === "senior") {
+                    total -= total * value;
+                } else {
+                    total += value;
+                }
+            }
+        });
+
+        totalDisplay.innerText = total.toFixed(2);
+    }
+
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', calculateTotal);
+    });
+
+});
+</script>
+
 
     <script>
     $(document).ready(function(){

@@ -220,6 +220,7 @@
 									<p><strong>Bill No:</strong> <span id="vp_bill_no" class=""></span></p>
 									<p><strong>Description:</strong> <span id="vp_description" class=""></span></p>
 									<p><strong>Amount Due:</strong> <span id="vp_amount_due" class=""></span></p>
+									<p><strong>Discount pwd/senior:</strong> <span id="vp_discount" class=""></span></p>
 									<p><strong>Amount Paid:</strong> <span id="vp_amount_paid" class=""></span></p>
 									<p><strong>Change:</strong> <span id="vp_change" class=""></span></p>
 									<p><strong>Payment Date:</strong> <span id="vp_payment_date" class=""></span></p>
@@ -636,6 +637,7 @@
 							$("#vp_description").text(bill.description);
 							$("#vp_amount_due").text(`₱${parseFloat(bill.amount).toFixed(2)}`);
 							$("#vp_amount_paid").text(`₱${parseFloat(bill.amount_paid).toFixed(2)}`);
+							$("#vp_discount").text(`₱${parseFloat(bill.discountAmount).toFixed(2)}`);
 							$("#vp_change").text(`₱${parseFloat(bill.amount_change).toFixed(2)}`);
 							$("#vp_payment_date").text(bill.payment_date);
 						} else {

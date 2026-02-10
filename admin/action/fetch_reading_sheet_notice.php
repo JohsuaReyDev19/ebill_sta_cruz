@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
             mrt.consumed,
             m.account_no,
             CONCAT(c.last_name, ', ', c.first_name) AS account_name,
+            c.discount,
             COALESCE(b.barangay, 'N/A') AS barangay_name,
             m.meter_no,
             COALESCE(z.zonebook, 'Unassigned') AS zonebook,
@@ -115,6 +116,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
             //     $amount = $consumed * 22.00;
             // }
 
+            $amount = $amountDue; 
+            $discountRate = 0;
+            $discountAmount = 0;
+            $finalAmount = $amount;
+
+            if (!empty($row['discount'])) {
+
+                $stmtRate = $con->prepare("SELECT rate FROM rates WHERE description = ?");
+                $stmtRate->bind_param("s", $row['discount']);
+                $stmtRate->execute();
+                $resultRate = $stmtRate->get_result();
+
+                if ($resultRate->num_rows > 0) {
+                    $rateRow = $resultRate->fetch_assoc();
+                    $discountRate = (float)$rateRow['rate'];
+
+                    $discountAmount = $amount * $discountRate;
+                    
+                    $finalAmount = $amount - $discountAmount;
+                }
+            }
+
             $data[] = [
                 'checkbox'         => '<input type="checkbox" class="rowCheckbox" data-id="'.$row['meter_reading_id'].'">',
                 'account_no'       => $row['account_no'],
@@ -127,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                 'previous_reading' => number_format($previousReading, 2),
                 'current_reading'  => number_format($currentReading, 2),
                 'consumed'         => number_format($consumed, 2),
-                'amount_due'       => '₱' . number_format($amountDue, 2)
+                'amount_due'       => '₱' . number_format($finalAmount, 2)
             ];
         }
 

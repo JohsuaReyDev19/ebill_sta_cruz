@@ -79,7 +79,8 @@
                                         <table class="table table-bordered nowrap" id="myTable" width="100%" cellspacing="0">
                                             <thead class="">
                                                 <tr>
-                                                    <th scope="col">#</th>                                        
+                                                    <th scope="col">#</th>          
+                                                    <!-- <th scope="col">Id</th>                               -->
                                                     <th scope="col">Account No</th>                                        
                                                     <th scope="col">Account Type</th>                                        
                                                     <th scope="col">Meter No</th>                                         
@@ -135,6 +136,7 @@
 
                                                 <tr>
                                                     <td><?= $counter; ?></td>
+                                                    <!-- <td><?= $meters_id ?></td> -->
                                                     <td><?= htmlspecialchars($account_no); ?></td>
                                                     <td><?= htmlspecialchars($account_type); ?></td>
                                                     <td><?= htmlspecialchars($meter_no); ?></td>
@@ -154,7 +156,8 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <a class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#edit_<?php echo $meters_id; ?>"><i class="fa-solid fa-edit"></i> Edit Account</a>
-                                                        <a href="edit-concessionaires-accounts-change-meters.php?title=Account Meter Info&concessionaire_id=<?php echo urlencode($_GET['id']); ?>&meters_id=<?php echo urlencode($encryptedData); ?>" class="btn btn-sm btn-success shadow-sm"><i class="fa-solid fa-gauge-simple"></i> Change Meter</a>
+                                                        <a href="edit-concessionaires-accounts-change-meters.php?title=Account Meter Info&concessionaire_id=<?php echo urlencode($_GET['id']); ?>&meters_id=<?php echo urlencode($encryptedData);
+                                                        ?>" class="btn btn-sm btn-success shadow-sm"><i class="fa-solid fa-gauge-simple"></i> Change Meter</a>
                                                         <button class="btn btn-sm btn-warning shadow-sm change-status-btn"
                                                             data-meter-id="<?php echo $meters_id; ?>"
                                                             data-meter-name="<?php echo htmlspecialchars($full_name); ?>">
@@ -318,30 +321,93 @@
     </script>
 
     <script>
-        document.addEventListener("click", function(e) {
+    document.addEventListener("click", function(e) {
 
-            if (e.target.classList.contains("change-status-btn")) {
+        if (e.target.classList.contains("change-status-btn")) {
 
-                let meterId = e.target.dataset.meterId;
-                let meterName = e.target.dataset.meterName;
+            let meterId = e.target.dataset.meterId;
+            let meterName = e.target.dataset.meterName;
 
-                Swal.fire({
-                    title: `Change Status for ${meterName}`,
-                    input: 'select',
-                    inputOptions: {
-                        0: 'Active / re-connection',
-                        1: 'Disconnected',
-                        2: 'Temporary Disconnected'
+            Swal.fire({
+                title: `Change Status for ${meterName}`,
+                input: 'select',
+                inputOptions: {
+                    0: 'Active / Re-connection',
+                    1: 'Disconnection',
+                    2: 'Temporary Disconnected'
+                },
+                inputPlaceholder: 'Select a status',
+                showCancelButton: true,
+                confirmButtonText: 'Apply',
+                cancelButtonText: 'Cancel',
+                preConfirm: (value) => {
+
+                    let description = '';
+
+                    if (value == 0) description = 'Re-connection';
+                    if (value == 1) description = 'Disconnection';
+                    if (value == 2) description = 'Temporary Disconnection';
+
+                    if (!description) {
+                        Swal.showValidationMessage("Please select a status.");
+                        return false;
+                    }
+
+                    // Fetch rate first
+                    return fetch("action/get-rates-charge.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "description=" + encodeURIComponent(description)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+
+                        if (data.status !== "success") {
+                            throw new Error("Rate not found.");
+                        }
+
+                        let rate = parseFloat(data.rate).toFixed(2);
+
+                        return {
+                            status: value,
+                            description: description,
+                            rate: rate
+                        };
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(error.message);
+                    });
+                }
+
+            }).then((result) => {
+
+                if (!result.isConfirmed) return;
+
+                let { status, description, rate } = result.value;
+
+                // 1️⃣ Add charge
+                $.ajax({
+                    url: 'action/add_other_material.php',
+                    method: 'POST',
+                    data:{
+                        meters_id: meterId,
+                        units_included: "Status Connectivity",
+                        units: "0",
+                        quantity: "1",
+                        price_per_unit: rate,
+                        remarks: `${description} Charge`,
                     },
-                    inputPlaceholder: 'Select a status',
-                    showCancelButton: true,
-                    confirmButtonText: 'Update',
-                    cancelButtonText: 'Cancel',
-                }).then((result) => {
-                    if (result.isConfirmed) {
+                    dataType: 'json',
+                    success: function (response) {
 
-                        let status = result.value;
+                        if (response.status !== 'success') {
+                            Swal.fire('Error', 'Unable to add charge.', 'error');
+                            return;
+                        }
 
+                        // 2️⃣ Update status
                         fetch("action/delete-account.php", {
                             method: "POST",
                             headers: {
@@ -351,23 +417,118 @@
                         })
                         .then(response => response.json())
                         .then(data => {
+
                             if (data.status === "success") {
-                                Swal.fire('Updated!', 'Service status updated.', 'success')
-                                    .then(() => location.reload());
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Updated!',
+                                    text: `₱${rate} charge added and status updated successfully.`
+                                }).then(() => location.reload());
                             } else {
-                                Swal.fire('No changes!', data.message, 'warning');
+                                Swal.fire('Warning', data.message, 'warning');
                             }
-                        })
-                        .catch(error => {
-                            Swal.fire('Error!', 'Something went wrong.', 'error');
-                            console.error(error);
+
                         });
 
+                    },
+                    error: function () {
+                        Swal.fire('Error', 'Something went wrong while saving.', 'error');
                     }
                 });
-            }
+
+            });
+        }
+    });
+    </script>
+
+
+
+
+<script>
+        $(document).ready(function () {
+            $('#addOtherMaterialBtn').on('click', function (e) {
+                e.preventDefault();
+
+                const form = $('#addOtherMaterialForm');
+                const requiredFields = form.find('[required]');
+                let isValid = true;
+
+                // Remove old validation styles
+                form.find('.form-control, .custom-select').removeClass('is-invalid');
+
+                // Basic required field check
+                requiredFields.each(function () {
+                    if ($(this).val() === '' || $(this).val() === null) {
+                        isValid = false;
+                        $(this).addClass('is-invalid');
+                    }
+                });
+
+                // Numeric quantity validation
+                const quantity = parseFloat($('#quantityInput').val());
+                if (isNaN(quantity) || quantity <= 0) {
+                    $('#quantityInput').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                // Price validation
+                const priceText = $('#priceLabel').text().replace(/[₱,]/g, '');
+                const price = parseFloat(priceText);
+                if (isNaN(price) || price <= 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing or Invalid Price',
+                        text: 'Please select a material with valid pricing.'
+                    });
+                    return;
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Incomplete Fields',
+                        text: 'Please complete all required fields before submitting.'
+                    });
+                    return;
+                }
+
+                // Submit via AJAX
+                $.ajax({
+                    url: 'action/add_other_material.php',
+                    method: 'POST',
+                    data: form.serialize(),
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Material Added',
+                                text: response.message
+                            }).then(() => {
+                                $('#addNewMaterials').modal('hide'); // 
+                                form[0].reset();
+                                $('#unitsLabel').text('—');
+                                $('#priceLabel').text('—');
+                                $('#subtotalLabel').text('₱0.00');
+                                $('#unitsInput').val('');
+                                $('#priceInput').val('');
+
+                                // Reload the table if available
+                                if ($.fn.DataTable.isDataTable('#otherBillingTable')) {
+                                    $('#otherBillingTable').DataTable().ajax.reload(null, false); // or true if you want to go to first page
+                                }
+                            });
+                        } else {
+                            Swal.fire('Error', response.message || 'Unable to add material.', 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('Error', 'An unexpected error occurred while saving.', 'error');
+                    }
+                });
+            });
         });
-        </script>
+    </script>
 
 
     <!-- Edit Account -->
