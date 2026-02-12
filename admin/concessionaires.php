@@ -72,6 +72,35 @@
                     </div>
                     
                 </div>
+
+
+                <!-- Edit Confirmation Modal -->
+                <div class="modal fade" id="confirmEditModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                    
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Edit</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        Are you sure you want to edit this concessionaire profile?
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                        </button>
+                        <a href="#" id="confirmEditBtn" class="btn btn-primary">
+                        Yes, Continue
+                        </a>
+                    </div>
+
+                    </div>
+                </div>
+                </div>
+
                 <!-- /.container-fluid -->
 
             </div>
@@ -118,6 +147,24 @@
             scrollY: '70vh'
         });
     </script>
+
+    <script>
+        document.addEventListener("click", function(e) {
+            if (e.target.closest(".open-edit-modal")) {
+
+                let button = e.target.closest(".open-edit-modal");
+                let url = button.getAttribute("data-url");
+
+                // Set the redirect link
+                document.getElementById("confirmEditBtn").setAttribute("href", url);
+
+                // Show modal
+                let modal = new bootstrap.Modal(document.getElementById("confirmEditModal"));
+                modal.show();
+            }
+        });
+    </script>
+
 
     <script>
         $(document).ready(function() {

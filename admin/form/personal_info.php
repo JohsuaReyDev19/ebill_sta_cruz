@@ -78,6 +78,11 @@
                         <option value="Senior">Senior</option>
                     </select>
                 </div>
+                <div class="form-group mb-2">
+                    <label class="form-label" id="addCons">ID No. <span class="text-primary">*</span></label>
+                    <input type="text" class="form-control" name="id_number" id="inputFields">
+                    <div class="invalid-feedback">Please enter concessionare's ID Number</div>
+                </div>
             </div>
         </div>
     </div>

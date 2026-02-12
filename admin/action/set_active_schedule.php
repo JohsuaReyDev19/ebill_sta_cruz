@@ -16,8 +16,9 @@ if (isset($_POST['schedule_id']) && is_numeric($_POST['schedule_id'])) {
         END
         WHERE deleted = 0";
 
+        $updateBill = "UPDATE meters SET deleted = 0, bill = 0";
     // Execute the query
-    if (mysqli_query($con, $sql)) {
+    if (mysqli_query($con, $sql) AND mysqli_query($con, $updateBill)) {
         // If the query is successful, return success
         echo 'success';
     } else {

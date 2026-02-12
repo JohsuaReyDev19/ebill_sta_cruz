@@ -2,6 +2,7 @@
 require '../../db/dbconn.php'; // Adjust if needed
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $meter_id = $_POST['meter_id'];
     $meter_reading_id = $_POST["meter_reading_id"];
     $description = $_POST["description"];
     $amount_due = $_POST["amount_due"];
@@ -14,6 +15,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo json_encode(["status" => "error", "message" => "Missing required fields."]);
         exit;
     }
+
+    $updateSql = "UPDATE meters SET deleted = 1, bill = 1 WHERE meters_id = ?";
+        $updateStmt = $con->prepare($updateSql);
+        $updateStmt->bind_param("i", $meter_id);
+
+        if (!$updateStmt->execute()) {
+            throw new Exception("Failed to update meter status.");
+        }
+
 
     // Insert into the collection table
     $query = "INSERT INTO collection (meter_reading_id, description, amount_due, due_date, amount_paid, amount_change, payment_date)
@@ -36,3 +46,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     echo json_encode(["status" => "error", "message" => "Invalid request."]);
 }
 ?>
+
+

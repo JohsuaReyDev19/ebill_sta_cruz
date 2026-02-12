@@ -4,7 +4,8 @@ require '../../db/dbconn.php';
 $account_no = isset($_POST['account_no']) ? $_POST['account_no'] : (isset($_GET['account_no']) ? $_GET['account_no'] : '');
 
 $query = $con->prepare("
-    SELECT 
+    SELECT
+        mst.meters_id, 
         mrt.meter_reading_id, 
         mrt.description, 
         bsst.date_due, 
@@ -87,6 +88,7 @@ if ($result->num_rows > 0) {
         // Set account details only once
         if (empty($response['account'])) {
             $response["account"] = [
+                "meter_id" => $row['meters_id'],
                 "account_no" => $row['account_no'],
                 "account_name" => $row['account_name'],
                 "service_status" => $row['service_status'],
@@ -168,13 +170,14 @@ if ($result->num_rows > 0) {
             : '<button class="btn btn-primary btn-sm payBillBtn" data-bill-id="'.$row['meter_reading_id'].'">Pay</button>';
 
         $response['bills'][] = [
-    "meter_reading_id" => $row['meter_reading_id'],
-    "description"     => $row['description'],
-    "date_due"        => date("F d, Y", strtotime($row['date_due'])),
-    "consumed"        => number_format($consumed, 2),
-    "amount"          => number_format($finalAmount, 2, '.', ''),
-    "button"          => $button
-];
+            "meter_id" => $row['meters_id'],
+            "meter_reading_id" => $row['meter_reading_id'],
+            "description"     => $row['description'],
+            "date_due"        => date("F d, Y", strtotime($row['date_due'])),
+            "consumed"        => number_format($consumed, 2),
+            "amount"          => number_format($finalAmount, 2, '.', ''),
+            "button"          => $button
+        ];
 
     }
 }

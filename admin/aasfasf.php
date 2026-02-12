@@ -584,6 +584,13 @@
 		});
 		</script>
 
+		                    <!-- <a href="#" class="btn btn-sm btn-danger shadow-sm delete-concessionaire-btn"
+                        data-concessionaire-id="' . $encryptedData . '" 
+                        data-concessionaire-name="' . htmlspecialchars($row['full_name']) . '"
+                        data-concessionaire-address="' . htmlspecialchars($row['billing_address']) . '">
+                        <i class="fa-solid fa-trash"></i>
+                    </a> -->
+
 
 </body>
 

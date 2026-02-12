@@ -144,64 +144,68 @@
 						    </div>
                         </div>
 
-<!-- Payment Modal -->
-<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-primary" id="paymentModalLabel">
-                	<i class="fas fa-money-bill-wave fa-sm"></i>
-                	Bill Payment
-            	</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div class="modal-body">
-            	<div class="container">
-            		<form id="paymentForm">
-	                    <div class="form-group">
-	                        <p class="modal-label font-weight-bold">Account Name: <span class="font-weight-normal" id="account_name"></span></p>
-	                    </div>
-	                    <div class="form-group">
-	                        <p class="modal-label  font-weight-bold">Account No: <span class="font-weight-normal" id="account_no"></span></p>
-	                    </div>
-	                    <div class="form-group">
-	                        <p class="modal-label font-weight-bold">Bill No: <span class="font-weight-normal" id="bill_no"></span></p>
-	                    </div>
-	                    <div class="form-group">
-	                        <p class="modal-label font-weight-bold">Description: <span class="font-weight-normal" id="description"></span></p>
-	                    </div>
-	                    <div class="form-group">
-	                        <p class="modal-label font-weight-bold">Consumption (cu.m): <span class="font-weight-normal" id="consumption"></span></p>
-	                    </div>
-	                    <div class="form-group">
-	                        <p class="modal-label font-weight-bold">Amount Due: <span class="font-weight-normal" id="amount_due"></span></p>
-	                    </div>
-	                    <div class="form-group">
-	                        <p class="modal-label font-weight-bold">Due Date: <span class="font-weight-normal" id="due_date"></span></p>
-	                    </div>
-	                    <hr class="my-2">
-	                    <input type="hidden" name="meter_reading_id" id="mridInput">
-	                    <input type="hidden" name="description" id="descInput">
-	                    <input type="hidden" name="amount_due" id="adInput">
-	                    <input type="hidden" name="due_date" id="ddInput">
-	                    <div class="form-group">
-	                        <label class="modal-label">Amount to Pay:</label>
-	                        <input type="number" name="amount_paid" id="amount_paid" class="form-control" step="0.01" min="0">
-	                    </div>
-	                    <div class="form-group">
-	                        <label class="modal-label">Change:</label>
-	                        <input type="text" id="change" class="form-control" name="amount_change" readonly>
-	                    </div>
-	                </form>
-            	</div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="confirmPayment">Confirm Payment</button>
-            </div>
-        </div>
-    </div>
-</div>
+						<!-- Payment Modal -->
+						<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title text-primary" id="paymentModalLabel">
+											<i class="fas fa-money-bill-wave fa-sm"></i>
+											Bill Payment
+										</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									</div>
+									<div class="modal-body">
+										<div class="container">
+											<form id="paymentForm">
+												<!-- <div class="form-group">
+													<p class="modal-label font-weight-bold">Meter Id: <span class="font-weight-normal" id="meter_id"></span></p>
+												</div> -->
+												<div class="form-group">
+													<p class="modal-label font-weight-bold">Account Name: <span class="font-weight-normal" id="account_name"></span></p>
+												</div>
+												<div class="form-group">
+													<p class="modal-label  font-weight-bold">Account No: <span class="font-weight-normal" id="account_no"></span></p>
+												</div>
+												<div class="form-group">
+													<p class="modal-label font-weight-bold">Bill No: <span class="font-weight-normal" id="bill_no"></span></p>
+												</div>
+												<div class="form-group">
+													<p class="modal-label font-weight-bold">Description: <span class="font-weight-normal" id="description"></span></p>
+												</div>
+												<div class="form-group">
+													<p class="modal-label font-weight-bold">Consumption (cu.m): <span class="font-weight-normal" id="consumption"></span></p>
+												</div>
+												<div class="form-group">
+													<p class="modal-label font-weight-bold">Amount Due: <span class="font-weight-normal" id="amount_due"></span></p>
+												</div>
+												<div class="form-group">
+													<p class="modal-label font-weight-bold">Due Date: <span class="font-weight-normal" id="due_date"></span></p>
+												</div>
+												<hr class="my-2">
+												<input type="hidden" name="meter_reading_id" id="mridInput">
+												<input type="hidden" name="meter_id" id="meterId">
+												<input type="hidden" name="description" id="descInput">
+												<input type="hidden" name="amount_due" id="adInput">
+												<input type="hidden" name="due_date" id="ddInput">
+												<div class="form-group">
+													<label class="modal-label">Amount to Pay:</label>
+													<input type="number" name="amount_paid" id="amount_paid" class="form-control" step="0.01" min="0">
+												</div>
+												<div class="form-group">
+													<label class="modal-label">Change:</label>
+													<input type="text" id="change" class="form-control" name="amount_change" readonly>
+												</div>
+											</form>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-primary" id="confirmPayment">Confirm Payment</button>
+									</div>
+								</div>
+							</div>
+						</div>
 
 				<div id="viewPaymentModal" class="modal fade" tabindex="-1">
 					<div class="modal-dialog modal-dialog-centered">
@@ -215,6 +219,7 @@
 							</div>
 							<div class="modal-body">
 								<div class="container">
+									<!-- <p><strong>Meter Id:</strong> <span id="vp_meter_id" class=""></span></p> -->
 									<p><strong>Account Name:</strong> <span id="vp_account_name" class=""></span></p>
 									<p><strong>Account No:</strong> <span id="vp_account_no" class=""></span></p>
 									<p><strong>Bill No:</strong> <span id="vp_bill_no" class=""></span></p>
@@ -398,6 +403,7 @@
 		                        fetchedResponse = response; // Store response globally
 
 		                        // Populate account details
+								$('#meter_id').text(response.account.meter_id);
 		                        $('#accountNumber').text(response.account.account_no);
 		                        $('#accountName').text(response.account.account_name);
 		                        $('#accountStatus').text(response.account.service_status);
@@ -480,6 +486,7 @@
 
 			        if (billData) {
 			            // Set text for visible fields
+						$('#meter_id').text(fetchedResponse.account.meter_id);
 			            $("#account_name").text(fetchedResponse.account.account_name);
 			            $("#account_no").text(fetchedResponse.account.account_no);
 			            $("#bill_no").text(billData.meter_reading_id);
@@ -488,7 +495,8 @@
 			            $("#amount_due").text(parseFloat(billData.amount).toFixed(2));
 			            $("#due_date").text(billData.date_due);
 
-			            // Set values for hidden inputs
+			            // Set values for hidden inputs\
+						$("#meterId").val(billData.meter_id);
 			            $("#mridInput").val(billData.meter_reading_id);
 			            $("#descInput").val(billData.description);
 			            $("#adInput").val(parseFloat(billData.amount).toFixed(2));

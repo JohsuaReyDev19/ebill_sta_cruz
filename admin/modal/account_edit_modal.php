@@ -20,7 +20,7 @@
                                 <label class="control-label modal-label" for="account_no_<?php echo $meters_id; ?>">Account No</label>
                             </div>
                             <div class="col-12">
-                                <input class="form-control" id="account_no_<?php echo $meters_id; ?>" name="account_no" type="text" required value="<?php echo $account_no; ?>">
+                                <input class="form-control" id="account_no_<?php echo $meters_id; ?>" name="account_no" type="text" required value="<?php echo $account_no; ?>" readonly>
                                 <div class="invalid-feedback">
                                     Please input a valid account no.
                                 </div>

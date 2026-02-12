@@ -94,6 +94,10 @@
 
                                                 </div>
                                             </div>
+											<h2 id="header_account_num" class="mt-4 d-none">Account No.</h2>
+											<div id="account_no_card" class="card border-left-primary shadow p-3 text-center d-none">
+												<h1 id="account_num" style="letter-spacing: 3px; font-size: 60px;"></h1>
+											</div>
                                         </div>
 
                                         <!-- Right Column: Pricing Breakdown Table -->
@@ -240,7 +244,7 @@
 									                            <div class="invalid-feedback">Please select zone/book.</div>
 									                        </div>
 
-															<div class="form-group mb-3">
+															<div class="form-group mb-3" hidden>
 									                            <label class="control-label modal-label" for="account_no">Account No</label>
 									                            <input class="form-control form-control-sm" id="account_no" name="account_no" type="text"  readonly >
 									                            <div class="invalid-feedback">
@@ -367,6 +371,10 @@
 			success: function(res) {
 				if (res.status === 'success') {
 					$('#account_no').val(res.account_no);
+					// $('#account_num').val(res.account_no);
+					$('#account_no_card').removeClass('d-none');
+					$('#header_account_num').removeClass('d-none');
+					$('#account_num').text(res.account_no);
 				} else {
 					Swal.fire('Error', res.message, 'error');
 				}

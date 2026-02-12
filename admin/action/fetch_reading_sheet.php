@@ -50,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             INNER JOIN meter_reading_tbl r 
                 ON r.meters_id = m.meters_id
                 AND r.billing_schedule_id = ?
-                AND r.billed = 1
+                AND r   .billed = 1
                 AND r.deleted = 0
 
             WHERE m.zonebook_id = ?
-              AND m.deleted = 0
+              AND m.bill = 0
               AND c.deleted = 0
         ";
 

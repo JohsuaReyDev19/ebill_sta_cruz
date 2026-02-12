@@ -60,15 +60,18 @@ while ($row = mysqli_fetch_assoc($result)) {
         'address' => $row['billing_address'],
         'contact_info' => $row['contact_no'],
         'accounts_info' => $row['accounts_info'] ?: 'No Accounts',
-        'action' => '<a href="edit-concessionaires.php?title=Edit Concessionaire&id=' . urlencode($encryptedData) . '" class="btn btn-sm btn-primary shadow-sm"><i class="fa-solid fa-user-pen"></i> Profile</a>
-                    <a href="edit-concessionaires-accounts.php?title=Accounts&id=' . urlencode($encryptedData) . '" class="btn btn-sm btn-success shadow-sm"><i class="fa-solid fa-gauge"></i> Accounts</a>
-                    <a href="#" class="btn btn-sm btn-danger shadow-sm delete-concessionaire-btn"
-                        data-concessionaire-id="' . $encryptedData . '" 
-                        data-concessionaire-name="' . htmlspecialchars($row['full_name']) . '"
-                        data-concessionaire-address="' . htmlspecialchars($row['billing_address']) . '">
-                        <i class="fa-solid fa-trash"></i>
-                    </a>
-                    '
+        'action' => '
+            <a href="#" 
+            class="btn btn-sm btn-primary shadow-sm open-edit-modal"
+            data-url="edit-concessionaires.php?title=Edit Concessionaire&id=' . urlencode($encryptedData) . '">
+            <i class="fa-solid fa-user-pen"></i> Profile
+            </a>
+
+            <a href="edit-concessionaires-accounts.php?title=Accounts&id=' . urlencode($encryptedData) . '" 
+            class="btn btn-sm btn-success shadow-sm">
+            <i class="fa-solid fa-gauge"></i> Accounts
+            </a>
+        '
     ];
 }
 

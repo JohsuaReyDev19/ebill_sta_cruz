@@ -708,10 +708,9 @@
                                 $('#unitsLabel').text(response.units);
                                 $('#priceLabel').text(`₱${response.price_per_units}`);
                                 pricePerUnit = parseFloat(response.price_per_units.replace(/,/g, '')) || 0;
-                                // Set hidden input values
                                 $('#unitsInput').val(response.units);
                                 $('#priceInput').val(parseFloat(response.price_per_units));
-                                updateSubtotal(); // Recalculate if needed
+                                updateSubtotal(); 
                             } else {
                                 $('#unitsLabel').text('—');
                                 $('#priceLabel').text('—');
@@ -816,7 +815,7 @@
 
                                 // Reload the table if available
                                 if ($.fn.DataTable.isDataTable('#otherBillingTable')) {
-                                    $('#otherBillingTable').DataTable().ajax.reload(null, false); // or true if you want to go to first page
+                                    $('#otherBillingTable').DataTable().ajax.reload(null, false);
                                 }
                             });
                         } else {
