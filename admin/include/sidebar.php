@@ -113,7 +113,7 @@
                         <a class="collapse-item" href="zonebook-settings.php?title=Zone/Book">Zone/Book</a>
                         <a class="collapse-item" href="classification-settings.php?title=Classification">Classification</a>
                         <a class="collapse-item" href="account-type-settings.php?title=Account Type Settings">Account Type</a>
-                        <a class="collapse-item" href="#">Manage Barangay's</a>
+                        <a class="collapse-item" href="manage-barangay.php?title=Manage Barangay">Manage Barangay's</a>
                         <!-- <a class="collapse-item" href="service-status-settings.php">Service Status</a> -->
                         <a class="collapse-item" href="meter-brand-settings.php">Meter Brand</a>
                         <a class="collapse-item" href="meter-size-settings.php?title=Meter Size">Meter Size</a>

@@ -183,7 +183,7 @@
 
 																<ul class="dropdown-menu w-100" aria-labelledby="userStatusControls">
 																<li><a id="printReportsBtn" href="#" class="dropdown-item">Daily Billing Report</a></li>
-																<li><a id="printNoticeBtn" class="dropdown-item" >Billing Notice</a></li>
+																<li><a id="printNoticeBilled" class="dropdown-item" >Billing Notice</a></li>
 																<li><a id="printAllTableBtn" class="dropdown-item" href="#">Billed Concessionaire</a></li>
 																<li><a id="printUnbilledBtn" class="dropdown-item" href="#">Unbilled Concessionaire</a></li>
 																<li><a id="#" class="dropdown-item" href="showAll.php">Summary of Collection</a></li>
@@ -258,11 +258,12 @@
 										<div class="d-flex justify-content-between align-items-center">
 											<label for="myDateFrom" class="form-label">From</label>
 											<input type="date" id="myDateFrom" class="form-control form-control-sm ml-2">
+
 											<label for="myDateTo" class="form-label ml-2">To</label>
 											<input type="date" id="myDateTo" class="form-control form-control-sm ml-2">
-											<button class="btn btn-success btn-sm w-100 ml-2" id="applyDateFilter">Filter</button>
 										</div>
 									</div>
+
 
 						            <div class="card-body">
 						                <div class="table-responsive">
@@ -414,42 +415,41 @@ $('#filterBarangay').on('change', function () {
 
 	<!-- View All -->
 
-	<script>
-		$(document).ready(function () {
-		function togglePrintOptions(mode) {
-			// mode: "billed" or "unbilled"
-			if (mode === "billed") {
-				$("#printNoticeBtn, #printAllTableBtn").show();
-				$("#printUnbilledBtn").hide();
-			} else if (mode === "unbilled") {
-				$("#printNoticeBtn, #printAllTableBtn, #printReportsBtn").hide();
-				$("#printUnbilledBtn").show();
-			}else if(mode === "printDefault"){
-				$("#printNoticeBtn, #printAllTableBtn, #printUnbilledBtn").hide();
-				$("#printReportsBtn").show();
-			}
-		}
+		<script>
+$(document).ready(function () {
 
-		// When Show Billed is clicked
-		$("#generateBtn").on("click", function (e) {
-			e.preventDefault();
-			togglePrintOptions("billed");
-			// Your existing code to show billed accounts
-		});
+    function hideAllPrintButtons() {
+        $("#printReportsBtn, #printNoticeBilled, #printAllTableBtn, #printUnbilledBtn").hide();
+    }
 
-		// When Show Unbilled is clicked
-		$("#showUnbilled").on("click", function (e) {
-			e.preventDefault();
-			togglePrintOptions("unbilled");
-			// Your existing code to show unbilled accounts
-		});
+    // 🔹 On page load → hide everything
+    hideAllPrintButtons();
+
+    $("#zonebook_id").on("click", function () {
+       // hide everything first
+            $("#printReportsBtn").show();   // show ONLY this
+			$("#printAllTableBtn").addClass('d-none');
+    });
+
+    $("#generateBtn").on("click", function (e) {
+        e.preventDefault();
+
+        hideAllPrintButtons();
+        $("#printAllTableBtn, #printNoticeBilled").show();
+		$("#printAllTableBtn").removeClass('d-none');
+    });
+
+    $("#showUnbilled").on("click", function (e) {
+        e.preventDefault();
+
+        hideAllPrintButtons();
+        $("#printUnbilledBtn").show();
+    });
+
+});
+</script>
 
 
-		// Optional: On page load, hide unbilled print
-		togglePrintOptions("printDefault"); // default view, assuming billed is default
-	});
-
-	</script>
 
 	<script>
 		// Prevent parent dropdown from closing when clicking inside nested dropdown
@@ -462,31 +462,36 @@ $('#filterBarangay').on('change', function () {
 	</script>
 	
 	<script>
-	document.getElementById('applyDateFilter').addEventListener('click', function () {
+		function filterTableByDate() {
 
-		const from = document.getElementById('myDateFrom').value;
-		const to   = document.getElementById('myDateTo').value;
+			const fromValue = document.getElementById('myDateFrom').value;
+			const toValue   = document.getElementById('myDateTo').value;
 
-		const fromDate = from ? new Date(from) : null;
-		const toDate   = to ? new Date(to) : null;
+			const fromDate = fromValue ? new Date(fromValue + "T00:00:00") : null;
+			const toDate   = toValue ? new Date(toValue + "T23:59:59") : null;
 
-		const rows = document.querySelectorAll('#readingSheetTable tbody tr');
+			const rows = document.querySelectorAll('#readingSheetTable tbody tr');
 
-		rows.forEach(row => {
+			rows.forEach(row => {
 
-			// Reading Date column index (adjust if needed)
-			const dateText = row.cells[9].innerText.trim();
-			const rowDate = new Date(dateText);
+				const dateText = row.cells[9].innerText.trim();
 
-			let show = true;
+				// Convert safely
+				const rowDate = new Date(dateText);
 
-			if (fromDate && rowDate < fromDate) show = false;
-			if (toDate && rowDate > toDate) show = false;
+				let show = true;
 
-			row.style.display = show ? '' : 'none';
-		});
-	});
+				if (fromDate && rowDate < fromDate) show = false;
+				if (toDate && rowDate > toDate) show = false;
+
+				row.style.display = show ? '' : 'none';
+			});
+		}
+
+		document.getElementById('myDateFrom').addEventListener('change', filterTableByDate);
+		document.getElementById('myDateTo').addEventListener('change', filterTableByDate);
 	</script>
+
 
 	 
 </body>

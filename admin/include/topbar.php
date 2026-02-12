@@ -83,6 +83,9 @@
                                 }elseif($title == "Meter Size"){
                                     echo '<i class="fa-solid fa-gauge mr-2"></i>';
                                     echo $title;
+                                }elseif($title == "Manage Barangay"){
+                                    echo '<i class="fa-solid fa-user fa-sm mr-2"></i>';
+                                    echo $title;
                                 }
 
 

@@ -109,20 +109,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $suffix_name = isset($_POST['suffix_name']) ? mysqli_real_escape_string($con, $_POST['suffix_name']) : '';
             $gender = isset($_POST['gender']) ? mysqli_real_escape_string($con, $_POST['gender']) : '';
             $discount = isset($_POST['discount']) ? mysqli_real_escape_string($con, $_POST['discount']) : '';
-
+            $id_number = isset($_POST['id_number']) ? mysqli_real_escape_string($con, $_POST['id_number']) : '';
 
             $sql_concessionaire = "INSERT INTO concessionaires (
                 last_name, first_name, middle_name, suffix_name, gender,
                 institution_name, institution_description, is_institution,
                 same_address, home_citytownmunicipality_id, home_barangay_id, home_sitio, home_street, home_housebuilding_no,
                 billing_citytownmunicipality_id, billing_barangay_id, billing_sitio, billing_street, billing_housebuilding_no,
-                contact_no, email, date_added, profile, discount
+                contact_no, email, date_added, profile, discount, id_number
             ) VALUES (
                 '$last_name', '$first_name', '$middle_name', '$suffix_name', '$gender',
                 '', '', 0,
                 '$same_address', '$home_citytown', '$home_barangay', '$home_sitio', '$home_street', '$home_house_no',
                 '$billing_citytown', '$billing_barangay', '$billing_sitio', '$billing_street', '$billing_house_no',
-                '$contact_no', '$email', '$date_added', '$file_name', '$discount'
+                '$contact_no', '$email', '$date_added', '$file_name', '$discount', '$id_number'
             )";
         }
 

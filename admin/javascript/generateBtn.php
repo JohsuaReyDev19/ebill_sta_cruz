@@ -29,7 +29,7 @@ $(document).ready(function () {
                 text: "Please select both a billing schedule and zone/book.",
             });
 
-            $("#printNoticeBtn").prop("disabled", true);
+            $("#printNoticeBilled").prop("disabled", true);
             return;
         }
 
@@ -131,7 +131,7 @@ $(document).ready(function () {
     /* =====================================================
        PRINT NOTICE (FULLY FIXED)
     ===================================================== */
-    $("#printNoticeBtn").click(function () {
+    $("#printNoticeBilled").click(function () {
 
         let selectedAccounts = [];
 
