@@ -86,6 +86,9 @@
                                 }elseif($title == "Manage Barangay"){
                                     echo '<i class="fa-solid fa-user fa-sm mr-2"></i>';
                                     echo $title;
+                                }elseif($title == "Edit Account Staff"){
+                                    echo '<i class="fa-solid fa-user fa-sm mr-2"></i>';
+                                    echo $title;
                                 }
 
 

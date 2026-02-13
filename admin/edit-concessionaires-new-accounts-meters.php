@@ -244,7 +244,7 @@
 									                            <div class="invalid-feedback">Please select zone/book.</div>
 									                        </div>
 
-															<div class="form-group mb-3" hidden>
+															<div class="form-group mb-3" >
 									                            <label class="control-label modal-label" for="account_no">Account No</label>
 									                            <input class="form-control form-control-sm" id="account_no" name="account_no" type="text"  readonly >
 									                            <div class="invalid-feedback">
@@ -360,13 +360,14 @@
 		function updateAccountNo() {
 		const zonebook = $('#zonebook').val();
 		const meter_size = $('#meter_size').val();
+		const classification_name = $('#classification').val();
 
 		if (!zonebook || !meter_size || zonebook === '0') return;
 
 		$.ajax({
 			url: 'action/generate_account_no.php',
 			type: 'POST',
-			data: { zonebook_id: zonebook, meter_size_id: meter_size },
+			data: { zonebook_id: zonebook, meter_size_id: meter_size, classification: classification_name },
 			dataType: 'json',
 			success: function(res) {
 				if (res.status === 'success') {
@@ -386,7 +387,7 @@
 	}
 
 	// Trigger when Zone/Book or Meter Size changes
-	$('#zonebook, #meter_size').on('change', updateAccountNo);
+	$('#zonebook, #meter_size, #classification').on('change', updateAccountNo);
 
 
 	</script>

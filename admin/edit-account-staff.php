@@ -54,7 +54,7 @@
 
 
                                                         <!-- Personal  Information-->
-                                                        <?php include 'form-add/personal_info.php'; ?>
+                                                        <?php include 'form-add/edit-staff.php'; ?>
                                                         <!-- Contact Information -->
                                                         <?php include 'form-add/contact_info.php'; ?>
                                                         <!-- Address Information -->
@@ -313,6 +313,7 @@
     </script>
 
     <script>
+
         $('#profileUpload').on('change', function() {
                 const fileInput = $(this)[0];
                 const file = fileInput.files[0];

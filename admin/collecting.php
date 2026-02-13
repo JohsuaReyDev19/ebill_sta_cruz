@@ -36,113 +36,126 @@
 						                Concessionaire Information
 						            </div> -->
 						            <div class="card-body">
-						                <div>
+    <div>
 
-						                    <!-- Account Search Input -->
-						                    
-
-						                    <!-- Search/Clear Buttons -->
+        <!-- Top Controls (Account Select + Clear Button) -->
+        
 
 
-                                                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center px-2 mb-3 gap-3">
-														<!-- Label -->
-														
+        <!-- MAIN 2 COLUMN SECTION -->
+        <div class="row mb-3">
 
-														<!-- Buttons and Select -->
-														<div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-3 w-100">
-															<!-- Account Select -->
-															<div class="flex-grow-1 mr-2 mb-2" style="min-width: 0;">
-																<select class="form-select form-select-sm border-primary w-100" id="account_number" required>
-																	<!-- Options go here -->
-																</select>
-															</div>
+            <!-- LEFT COLUMN -->
+            <div class="col-12 col-lg-5 d-flex mb-3 mb-lg-0 ">
+                <div class=" flex-fill">
+					<div class="row mb-4">
+						<div class="col-12">
 
-															<!-- Action Buttons -->
-															<div class="d-flex gap-2 flex-shrink-0 flex-wrap">
-																<button class="btn btn-secondary btn-sm shadow-sm mb-2" id="clearBtn" disabled>
-																	Clear
-																</button>
-															</div>
-														</div>
-													</div>
+							<div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-3 w-100">
 
+								<!-- Account Select (Full Width & Bigger) -->
+								<div class="flex-grow-1">
+									<select class="form-select form-select-lg border-primary w-100 "
+											style="height: 70px;" 
+											id="account_number" required>
+										<!-- Options go here -->
+									</select>
+								</div>
 
+								<!-- Clear Button (Bigger) -->
+								<div>
+									<button class="btn btn-secondary shadow-sm ml-2" 
+											id="clearBtn" disabled>
+										Clear
+									</button>
+								</div>
 
+							</div>
 
-						                    <!-- Account Details -->
-						                    <div class="col-sm-12 col-12 d-flex mb-2 mt-sm-2 mt-0">
-                                                <div class="card flex-fill">
-                                                    <div class="card-body py-2">
-														<label class="form-label mb-2 d-none d-sm-block">Concessionaire Information</label>
-                                                        <div class="row g-1">
-                                                            
-                                                            <div class="col-sm-2 col-12">
-                                                                <p class="card-text text-primary m-0 small">Account Number:</p>
-                                                                <span class="text-dark small" id="accountNumber"></span>
-                                                            </div>
+						</div>
+					</div>
+                    <div class="card-body py-2">
+                        <label class="form-label mb-2 d-none d-sm-block">
+                            Concessionaire Information
+                        </label>
 
-                                                            <div class="col-sm-2 col-12">
-                                                                <p class="card-text text-primary m-0 small">Account Name:</p>
-                                                                <span class="text-dark small" id="accountName"></span>
-                                                            </div>
+                        <div class="col g-3">
 
-                                                            <div class="col-sm-2 col-12">
-                                                                <p class="card-text text-primary m-0 small">Account Status:</p>
-                                                                <span class="text-dark small" id="accountStatus"></span>
-                                                            </div>
+							<div class="col-m-6 col-12">
+								<div class="fw-semibold text-primary">Account Number:</div>
+								<div id="accountNumber" class=" fw-bold text-dark" style="font-size: larger;"></div>
+							</div>
 
-                                                            <div class="col-sm-2 col-12">
-                                                                <p class="card-text text-primary m-0 small">Account Type:</p>
-                                                                <span class="text-dark small" id="accountType"></span>
-                                                            </div>
+							<div class="col-m-6 col-12">
+								<div class="fw-semibold text-primary">Account Name:</div>
+								<div id="accountName" class=" fw-bold text-dark" style="font-size: larger;"></div>
+							</div>
 
-                                                            <div class="col-sm-2 col-12">
-                                                                <p class="card-text text-primary m-0 small">Classification:</p>
-                                                                <span class="text-dark small" id="accountClassification"></span>
-                                                            </div>
+							<div class="col-m-6 col-12">
+								<div class="fw-semibold text-primary">Account Status:</div>
+								<div id="accountStatus" class=" fw-bold text-dark" style="font-size: larger;"></div>
+							</div>
 
-                                                            <div class="col-sm-2 col-12">
-                                                                <p class="card-text text-primary m-0 small">Address:</p>
-                                                                <span class="text-dark small" id="accountAddress"></span>
-                                                            </div>
+							<div class="col-m-6 col-12">
+								<div class="fw-semibold text-primary">Account Type:</div>
+								<div id="accountType" class=" fw-bold text-dark" style="font-size: larger;"></div>
+							</div>
 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-						                </div>
-						            </div>
+							<div class="col-m-6 col-12">
+								<div class="fw-semibold text-primary">Classification:</div>
+								<div id="accountClassification" class=" fw-bold text-dark" style="font-size: larger;"></div>
+							</div>
+
+							<div class="col-m-6 col-12">
+								<div class="fw-semibold text-primary">Address:</div>
+								<div id="accountAddress" class=" fw-bold text-dark" style="font-size: larger;"></div>
+							</div>
+
+						</div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="col-12 col-lg-7 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-header bg-primary text-white text-center">
+                        Bill and Other Charges
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap text-center w-100" 
+                                   id="readingSheetTable" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">Bill No</th>
+                                        <th style="width: 200px;">Description</th>
+                                        <th style="width: 100px;">Due Date</th>
+                                        <th style="width: 100px;">Amount Due</th>
+                                        <th style="width: 100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 						        </div>
 						    </div>
 						</div>
 
-                        <div class="row d-flex align-items-stretch mb-3">
-                            <div class="col-sm-12 col-12">
-						        <div class="card">
-						            <div class="card-header bg-primary text-white">
-						                Bill and Other Charges
-						            </div>
-						            <div class="card-body">
-						                <div class="table-responsive">
-	                                        <table class="table table-bordered nowrap text-center" id="readingSheetTable" width="100%" cellspacing="0">
-	                                            <thead class="">
-	                                                <tr>
-	                                                    <th scope="col">Bill No</th>                                        
-	                                                    <th scope="col">Description</th>                                        
-	                                                    <th scope="col">Due Date</th>                                               
-	                                                    <th scope="col">Amount Due</th>                            
-	                                                    <th scope="col">Action</th>
-	                                                </tr>
-	                                            </thead>
-	                                            <tbody>
-
-	                                            </tbody>
-	                                        </table>
-	                                    </div>
-						            </div>
-						        </div>
-						    </div>
-                        </div>
+                        
 
 						<!-- Payment Modal -->
 						<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
@@ -419,7 +432,7 @@
 								    var row = `
 								        <tr>
 								            <td>${bill.meter_reading_id}</td>
-								            <td>${bill.description}</td>
+								            <td style="font-style: 10px;">${bill.description}</td>
 								            <td>${bill.date_due}</td>
 								            <td>₱${bill.amount}</td>
 								            <td>${bill.button}</td>

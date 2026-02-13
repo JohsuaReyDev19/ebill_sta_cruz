@@ -43,6 +43,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['classification_id']) 
     $classification_name = $con->query("SELECT classification FROM classification_settings WHERE classification_id='$classification_id'")
         ->fetch_assoc()['classification'] ?? '';
 
+        $code = 0;
+    if($classification_name == "RESIDENTIAL" || $classification_name == "GOVERNMENT"){
+        $code = 1;
+    }elseif($classification_name == "COMMERCIAL C"){
+        $code = 2;
+    }elseif($classification_name == "COMMERCIAL B"){
+        $code = 3;
+    }elseif($classification_name == "COMMERCIAL A"){
+        $code = 4;
+    }elseif($classification_name == "COMMERCIAL / INDUSTRIAL"){
+        $code = 5;
+    }
+
     // Check for duplicates
     $check_stmt = $con->prepare(
         "SELECT price_matrix_id FROM manage_price_matrix WHERE classification=? AND meter_size=?"

@@ -18,7 +18,7 @@
                             <!-- Concessionaires -->
                             <div class="form-group mb-3">
                                 <div class="form-check role-check d-flex align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="yes" id="concessionaires">
+                                    <input class="form-check-input" type="checkbox" value="1" id="concessionaires">
                                     <label class="form-check-label fw-semibold" for="concessionaires">
                                         <i class="fa-solid fa-users text-primary"></i>
                                         Concessionaires
@@ -29,7 +29,7 @@
                             <!-- Billing system -->
                             <div class="form-group mb-3">
                                 <div class="form-check role-check d-flex align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="yes" id="billing_system">
+                                    <input class="form-check-input" type="checkbox" value="1" id="billing_system">
                                     <label class="form-check-label fw-semibold" for="billing_system">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.50" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-receipt-text-icon lucide-receipt-text text-primary"><path d="M13 16H8"/><path d="M14 8H8"/><path d="M16 12H8"/><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z"/></svg>
                                         Billing System
@@ -51,7 +51,7 @@
                             <!-- Accounting System -->
                             <div class="form-group mb-3">
                                 <div class="form-check role-check d-flex align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="yes" id="accounting_system">
+                                    <input class="form-check-input" type="checkbox" value="1" id="accounting_system">
                                     <label class="form-check-label fw-semibold" for="accounting_system">
                                         <i class="fa-solid fa-file-invoice-dollar text-primary"></i>
                                         Accounting System
@@ -62,7 +62,7 @@
                             <!-- Manage User -->
                             <div class="form-group mb-3">
                                 <div class="form-check role-check d-flex align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="yes" id="manage_user">
+                                    <input class="form-check-input" type="checkbox" value="1" id="manage_user">
                                     <label class="form-check-label fw-semibold" for="manage_user">
                                         <i class="fa-solid fa-users-gear text-primary"></i>
                                         Manage Users
@@ -73,7 +73,7 @@
                             <!-- System Settings -->
                             <div class="form-group mb-3">
                                 <div class="form-check role-check d-flex align-items-center">
-                                    <input class="form-check-input" type="checkbox" value="yes" id="system_settings">
+                                    <input class="form-check-input" type="checkbox" value="1" id="system_settings">
                                     <label class="form-check-label fw-semibold" for="system_settings">
                                         <i class="fa-solid fa-gear text-primary"></i>
                                         System Settings

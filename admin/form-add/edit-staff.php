@@ -38,10 +38,9 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label">Account Type</label>
-                    <select class="form-control custom-select" name="accountType" id="accountType" required>
-                        <option value="" selected disabled>-- select account --</option>
-                        <option value="Staff">Staff</option>
-                        <option value="Admin" disabled>Admin</option>
+                    <select name="accountType" class="form-select">
+                        <option value="Staff" selected>Staff</option>
+                        <option value="Admin">Admin</option>
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -95,7 +94,6 @@
                         </div>
                     </div>
                 </div>
-
     <!-- PERMISSIONS CARD -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-dark text-white">
@@ -141,8 +139,8 @@
 
     <!-- SUBMIT -->
     <div class="text-end mb-5">
-        <button type="submit" class="btn btn-primary px-5 w-100">
-            Add User
+        <button type="submit" class="btn btn-success px-5 w-100">
+            Update Now
         </button>
         <a href="users-active.php?title=Manage Active Users" class="btn btn-secondary mb-0 w-100 mt-2">Cancel</a>
     </div>

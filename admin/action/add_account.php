@@ -20,19 +20,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $response = ["status" => "error", "message" => "Required fields are missing."];
     } else {
         
-
-        // 1️⃣ Get Zone Code (3 digits)
         $zoneQuery = mysqli_query($con, "SELECT zonebook FROM zonebook_settings WHERE zonebook_id = '$zonebook_id'");
         $zoneRow = mysqli_fetch_assoc($zoneQuery);
         $zoneCode = str_pad($zoneRow['zonebook'], 3, '0', STR_PAD_LEFT);
 
-        // 2️⃣ Get Meter Size Code (2 digits)
         $meterQuery = mysqli_query($con, "SELECT meter_size FROM meter_size_settings WHERE meter_size_id = '$meter_size_id'");
         $meterRow = mysqli_fetch_assoc($meterQuery);
         $meterCode = str_pad($meterRow['meter_size'], 2, '0', STR_PAD_LEFT);
 
-        // 3️⃣ Get last series
-        $likePattern = "$zoneCode-$meterCode-%";
+        $classification_name = $con->query("SELECT classification FROM classification_settings WHERE classification_id='$classification'")
+        ->fetch_assoc()['classification'] ?? '';
+
+        $code = 0;
+        if($classification_name == "RESIDENTIAL" || $classification_name == "GOVERNMENT"){
+            $code = 1;
+        }elseif($classification_name == "COMMERCIAL C"){
+            $code = 2;
+        }elseif($classification_name == "COMMERCIAL B"){
+            $code = 3;
+        }elseif($classification_name == "COMMERCIAL A"){
+            $code = 4;
+        }elseif($classification_name == "COMMERCIAL / INDUSTRIAL"){
+            $code = 5;
+        }
+
+        $meterNo =  $meterCode; 
+
+        if ($meterCode == "1/2") {
+            $meterCode = "A";
+        } elseif ($meterCode == "1 1/2") {
+            $meterCode = "B";
+        } elseif ($meterCode == "2 1/2") {
+            $meterCode = "C";
+        }elseif($meterCode == "4 1/2"){
+            $meterCode ="E";
+        }elseif($meterCode == "4"){
+            $meterCode = "E";
+        }elseif($meterCode == "2"){
+            $meterCode = "C";
+        }elseif($meterCode == "3"){
+            $meterCode = "D";
+        }elseif($meterCode == "3 1/2"){
+            $meterCode = "D";
+        }elseif($meterCode == "1"){
+            $meterCode = "B";
+        }else{
+            $meterCode = $meterNo;
+        }
+
+        $likePattern = "$zoneCode-$code$meterCode-%";
         $seriesQuery = mysqli_query($con, "SELECT account_no FROM meters WHERE account_no LIKE '$likePattern' ORDER BY account_no DESC LIMIT 1");
 
         if (mysqli_num_rows($seriesQuery) > 0) {
@@ -45,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $seriesCode = str_pad($newSeries, 3, '0', STR_PAD_LEFT);
 
-        $account_no = "$zoneCode-$meterCode-$seriesCode";
+        $account_no = "$zoneCode-$code$meterCode-$seriesCode";
 
         // -------------------------------
         // Insert new meter record

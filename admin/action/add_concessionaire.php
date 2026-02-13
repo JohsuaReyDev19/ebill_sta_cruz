@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $unique_id = uniqid();
         $file_name = $unique_id . '_profile.' . $file_extension;
         $file_tmp = $file['tmp_name'];
-        $file_destination = "../../upload/profile/" . $file_name;
+        $file_destination = "../../upload/profile" . $file_name;
 
         // Check file size > 1MB
         if ($file['size'] > 1048576) { 

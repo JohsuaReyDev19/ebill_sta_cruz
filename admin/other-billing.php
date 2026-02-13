@@ -129,12 +129,7 @@
                                             </h6>
 
                                             <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 ">
-                                                <button type="button" 
-                                                        class="btn btn-primary"
-                                                        data-toggle="modal" 
-                                                        data-target="#otherChargesModal">
-                                                    Add Other Charges
-                                                </button>
+                                               
 
                                                 <button id="addMaterialBtn"
                                                         data-toggle="modal"
@@ -236,113 +231,6 @@
                                 </button>
                                 <button type="button" class="btn btn-primary shadow-sm" id="confirmBill">Confirm Billing</button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                                    <!-- Other Charges Modal -->
-                <div class="modal fade" id="otherChargesModal" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-
-                            <div class="modal-header bg-primary text-white">
-                                <h5 class="modal-title">Other Charges</h5>
-                                <button type="button" class="close text-white" data-dismiss="modal">
-                                    &times;
-                                </button>
-                            </div>
-
-                            <div class="modal-body">
-
-                                <form id="otherChargesForm">
-
-                                    <div class="form-check">
-                                        <input class="form-check-input charge-checkbox"
-                                            type="checkbox"
-                                            value="120.00"
-                                            id="changeName">
-                                        <label class="form-check-label" for="changeName">
-                                            Change Name (₱120.00)
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input charge-checkbox"
-                                            type="checkbox"
-                                            value="100.00"
-                                            id="penalty">
-                                        <label class="form-check-label" for="penalty">
-                                            Penalty (₱100.00)
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input charge-checkbox"
-                                            type="checkbox"
-                                            value="0.20"
-                                            id="pwd">
-                                        <label class="form-check-label" for="pwd">
-                                            PWD (20% Discount)
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input charge-checkbox"
-                                            type="checkbox"
-                                            value="10.00"
-                                            id="reconnection">
-                                        <label class="form-check-label" for="reconnection">
-                                            Re-connection (₱10.00)
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input charge-checkbox"
-                                            type="checkbox"
-                                            value="0.20"
-                                            id="senior">
-                                        <label class="form-check-label" for="senior">
-                                            Senior (20% Discount)
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input charge-checkbox"
-                                            type="checkbox"
-                                            value="10.00"
-                                            id="temporaryClosed">
-                                        <label class="form-check-label" for="temporaryClosed">
-                                            Temporary Closed (₱10.00)
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input charge-checkbox"
-                                            type="checkbox"
-                                            value="0.00"
-                                            id="temporaryDisconnection">
-                                        <label class="form-check-label" for="temporaryDisconnection">
-                                            Temporary Disconnection (No charge)
-                                        </label>
-                                    </div>
-
-                                    <hr>
-
-                                    <h5>Total: ₱<span id="totalCharge">0.00</span></h5>
-
-                                </form>
-
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary shadow-sm" data-bs-dismiss="modal">
-                                    Close
-                                </button>
-                                <button type="button" class="btn btn-primary" id="applyCharges">
-                                    Apply Charges
-                                </button>
-                            </div>
-
                         </div>
                     </div>
                 </div>

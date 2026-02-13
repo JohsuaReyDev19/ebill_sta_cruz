@@ -17,6 +17,7 @@ $result = $query->get_result();
 
 $accounts = [];
 while ($row = $result->fetch_assoc()) {
+    
     $accounts[] = [
         'account_no' => $row['account_no'], 
         'account_name' => $row['account_name'],

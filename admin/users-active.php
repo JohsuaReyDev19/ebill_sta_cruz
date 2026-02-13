@@ -132,7 +132,7 @@
                                                     <td class="text-center"><?php echo $role_text; ?></td>
                                                     <td><?php echo $status_text; ?></td>
                                                     <td class="text-center">
-                                                        <a href="#" class="btn btn-sm btn-primary edit-user-btn"
+                                                        <a href="edit-account-staff.php?title=Edit Account Staff" class="btn btn-sm btn-primary edit-user-btn"
                                                            data-user-id="<?php echo $user_id;?>"
                                                            data-user-name="<?php echo htmlspecialchars($full_name); ?>"
                                                            data-user-username="<?php echo htmlspecialchars($username); ?>"
