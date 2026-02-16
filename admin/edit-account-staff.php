@@ -348,7 +348,6 @@
             });
 document.getElementById("addUserForm").addEventListener("submit", function(e) {
 
-
     e.preventDefault();
 
     let form = this;

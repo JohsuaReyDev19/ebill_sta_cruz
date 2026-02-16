@@ -13,7 +13,8 @@ $query = $con->prepare("
         mst.account_no,
         CASE 
             WHEN mst.service_status_id = 1 THEN 'Connected'
-            ELSE 'Disconnected'
+            WHEN mst.service_status_id = 0 THEN 'Disconnected'
+            ELSE 'Temporary Disconnection'
         END AS service_status,
         CONCAT(cst.first_name, ' ', cst.last_name) AS account_name,
         cst.discount,

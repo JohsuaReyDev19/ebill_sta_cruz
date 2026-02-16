@@ -146,9 +146,10 @@
                                                         <?php 
                                                             $stats = htmlspecialchars($status); 
                                                             if($stats == "0"){
-                                                                echo '<span style="background-color: green; color: white; padding: 5px; border-radius: 10px;">Active</span>';
-                                                            }elseif($stats == "1"){
                                                                 echo '<span style="background-color: red; color: white; padding: 5px; border-radius: 10px;">Disconnected</span>';
+                                                            }elseif($stats == "1"){
+                                                                
+                                                                echo '<span style="background-color: green; color: white; padding: 5px; border-radius: 10px;">Active</span>';
                                                             }else{
                                                                 echo '<span style="background-color: orange; color: white; padding: 5px; border-radius: 10px;">Temporary Disconnected</span>';
                                                             }
@@ -332,8 +333,8 @@
                 title: `Change Status for ${meterName}`,
                 input: 'select',
                 inputOptions: {
-                    0: 'Active / Re-connection',
-                    1: 'Disconnection',
+                    1: 'Active / Re-connection',
+                    0: 'Disconnection',
                     2: 'Temporary Disconnected'
                 },
                 inputPlaceholder: 'Select a status',
