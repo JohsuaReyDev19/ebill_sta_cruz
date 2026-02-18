@@ -101,6 +101,13 @@
 
     <script>
         $(document).ready(function() {
+            $('#check-input-pwd, #check-input-senior').on('change', function(){
+                if($(this).is(':checked')){
+                    $('#ID_NO').removeClass('d-none');
+                }else{
+                    $('#ID_NO').addClass('d-none');
+                }
+            });
             $('#isOrganization').on('change', function () {
                 if ($(this).is(':checked')) {
                     // Hide Name & Gender, show Institution

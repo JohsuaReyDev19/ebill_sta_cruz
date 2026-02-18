@@ -39,7 +39,7 @@
                                 <div class="card-header py-3">
                                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
                                             <h6 class="font-weight-bold text-primary mb-0">
-                                                List of Active Users Account
+                                                List of Staff
                                             </h6>
                                         <!-- Left side: Title + Dropdown -->
                                         
@@ -111,7 +111,7 @@
                                                     if ($status == 0) {
                                                         $status_text = "<p class='badge-warning text-center rounded-pill'>PENDING</p>";
                                                     } elseif ($status == 1) {
-                                                        $status_text = "<p class='badge-success text-center rounded-pill'>APPROVED</p>";
+                                                        $status_text = "<p class='badge-success text-center rounded-pill'>ACITVE</p>";
                                                     } elseif ($status == 2) {
                                                         $status_text = "<p class='badge-danger text-center rounded-pill'>DECLINED</p>";
                                                     }
@@ -124,7 +124,7 @@
                                                     
                                             ?>
 
-                                                <tr>
+                                                <tr style="color: black;">
                                                     <td><?php echo $counter; ?></td>
                                                     <td><?php echo htmlspecialchars($full_name); ?></td>
                                                     <td><?php echo htmlspecialchars($username); ?></td>
@@ -132,7 +132,7 @@
                                                     <td class="text-center"><?php echo $role_text; ?></td>
                                                     <td><?php echo $status_text; ?></td>
                                                     <td class="text-center">
-                                                        <a href="edit-account-staff.php?title=Edit Account Staff" class="btn btn-sm btn-primary edit-user-btn"
+                                                        <a href="edit-account-staff.php?id=<?php echo $user_id;?>&title=Edit Account Staff" class="btn btn-sm btn-primary edit-user-btn"
                                                            data-user-id="<?php echo $user_id;?>"
                                                            data-user-name="<?php echo htmlspecialchars($full_name); ?>"
                                                            data-user-username="<?php echo htmlspecialchars($username); ?>"
@@ -140,13 +140,13 @@
                                                            >
                                                            <i class="fa-solid fa-edit"></i>
                                                         </a>
-                                                        <a href="#" class="btn btn-sm btn-danger delete-user-btn"
+                                                        <a href="#" class="btn btn-sm btn-warning delete-user-btn"
                                                            data-user-id="<?php echo $user_id; ?>"
                                                            data-user-name="<?php echo htmlspecialchars($full_name); ?>"
                                                            data-user-username="<?php echo htmlspecialchars($username); ?>"
                                                            data-user-email="<?php echo htmlspecialchars($email); ?>"
                                                            >
-                                                           <i class="fa-solid fa-trash"></i>
+                                                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert-icon lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -210,7 +210,7 @@
                 const email = decodeURIComponent(button.data('user-email'));
 
                 Swal.fire({
-                    title: 'Delete User Account?',
+                    title: 'Suspend User Account?',
                     html: `
                         <strong>Name:</strong> ${name}<br>
                         <strong>Username:</strong> ${username}<br>
@@ -220,11 +220,11 @@
                     showCancelButton: true,
                     confirmButtonColor: '#dc3545', // Red
                     cancelButtonColor: '#6c757d',  // Grey
-                    confirmButtonText: 'Yes, delete!'
+                    confirmButtonText: 'Yes, Suspend!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
-                            title: 'Deleting...',
+                            title: 'Suspending...',
                             text: 'Updating account status...',
                             allowOutsideClick: false,
                             didOpen: () => Swal.showLoading()
@@ -238,13 +238,13 @@
                                 if (response.trim() === 'success') {
                                     Swal.fire({
                                         title: 'Deleted!',
-                                        text: 'User account has been deleted successfully.',
+                                        text: 'User account has been Suspended successfully.',
                                         icon: 'success'
                                     }).then(() => {
                                         location.reload();
                                     });
                                 } else {
-                                    Swal.fire('Error', 'Something went wrong while deleting user.', 'error');
+                                    Swal.fire('Error', 'Something went wrong while suspending user.', 'error');
                                 }
                             },
                             error: function () {

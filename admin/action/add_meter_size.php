@@ -7,10 +7,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $meter_size = strtoupper(mysqli_real_escape_string($con, $_POST['meter_size']));
     $unit_price = floatval($_POST['unit_price']);
     $meter_size_remarks = strtoupper(mysqli_real_escape_string($con, $_POST['meter_size_remarks']));
+    $meter_brand = strtoupper(mysqli_real_escape_string($con, $_POST['meter_brand']));
 
     // SQL query to insert new concessionaire
-    $sql = "INSERT INTO `meter_size_settings`(`meter_size`, `unit_price`, `meter_size_remarks`) 
-    VALUES ('$meter_size', '$unit_price', '$meter_size_remarks')";
+    $sql = "INSERT INTO `meter_size_settings`(`meter_size`,`meter_brand`, `unit_price`, `meter_size_remarks`) 
+    VALUES ('$meter_size', '$meter_brand', '$unit_price', '$meter_size_remarks')";
 
     // Execute the query
     if (mysqli_query($con, $sql)) {

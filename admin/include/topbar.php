@@ -40,7 +40,7 @@
                                 elseif($title == "Account Meter Info"){
                                     echo '<i class="fa-solid fa-gauge-simple mr-2"></i>';
                                     echo $title;
-                                }elseif($title == "Manage Active Users"){
+                                }elseif($title == "Manage Users"){
                                     echo '<i class="fa-solid fa-user fa-sm mr-2"></i>';
                                     echo $title;
                                 }elseif($title == "Manage Pending Users"){
@@ -140,7 +140,7 @@
                                     <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Update Password
                                 </a>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="system-settings.php?title=System Settings">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>

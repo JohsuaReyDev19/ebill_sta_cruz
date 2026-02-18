@@ -10,10 +10,12 @@ if (isset($_POST['meter_size_id']) && is_numeric($_POST['meter_size_id'])) {
     $meter_size = strtoupper(mysqli_real_escape_string($con, $_POST['meter_size']));
     $unit_price = floatval($_POST['unit_price']);
     $meter_size_remarks = strtoupper(mysqli_real_escape_string($con, $_POST['meter_size_remarks']));
+    $meter_brand = strtoupper(mysqli_real_escape_string($con, $_POST['meter_brand']));
 
     // Update the meter_size_settings with the new values
     $sql = "UPDATE meter_size_settings SET 
-            meter_size='$meter_size', 
+            meter_size='$meter_size',
+            meter_brand='$meter_brand', 
             unit_price='$unit_price', 
             meter_size_remarks='$meter_size_remarks'
             WHERE meter_size_id='$meter_size_id'";

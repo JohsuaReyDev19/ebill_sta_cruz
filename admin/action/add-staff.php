@@ -2,6 +2,11 @@
 require '../../db/dbconn.php';
 header('Content-Type: application/json');
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../../vendor/autoload.php'; // Composer autoload for PHPMailer
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ===============================
@@ -19,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ===============================
     $contact_no   = trim($_POST['contact_no'] ?? '');
     $email        = trim($_POST['email'] ?? '');
-    $username = trim($_POST['username'] ?? '');
+    $username     = trim($_POST['email'] ?? '');
 
     // ===============================
     // PERMISSIONS
@@ -62,9 +67,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $check->close();
 
     // ===============================
-    // DEFAULT PASSWORD
+    // GENERATE RANDOM PASSWORD
     // ===============================
-    $password = password_hash('DefaultPassword123!', PASSWORD_DEFAULT);
+    function generateRandomPassword($length = 12) {
+        return bin2hex(random_bytes($length / 2));
+    }
+
+    $plain_password = generateRandomPassword(12);
+    $password = password_hash($plain_password, PASSWORD_DEFAULT);
 
     // ===============================
     // PROFILE UPLOAD
@@ -85,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $profile_file = uniqid('profile_', true) . '.' . $ext;
-        $uploadDir = '../../upload/profile';
+        $uploadDir = '../../upload/profile/';
 
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -99,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status'=>'error','message'=>'Profile image is required.']);
         exit;
     }
+
     $status = 1;
     $role = 2;
 
@@ -107,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ===============================
     $stmt = $con->prepare("
         INSERT INTO users (
-            first_name, middle_name, last_name, suffix_name,username,
+            first_name, middle_name, last_name, suffix_name, username,
             account_type, position, contact_no, email,
             password, profile,
             concessionaires, billing_system, collecting_system,
@@ -145,15 +156,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     if ($stmt->execute()) {
-        echo json_encode([
-            'status'=>'success',
-            'message'=>'User added successfully.'
-        ]);
+        $user_id = $stmt->insert_id;
+
+        // ===============================
+        // CREATE PASSWORD RESET TOKEN
+        // ===============================
+        $token = bin2hex(random_bytes(16));
+        $expiry = date('Y-m-d H:i:s', strtotime('+1 day'));
+
+        $stmtToken = $con->prepare("INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, ?)");
+        $stmtToken->bind_param("iss", $user_id, $token, $expiry);
+        $stmtToken->execute();
+
+        $resetLink = "https://stacruzwd-dev.projectbeta.net/set_password.php?token=$token";
+
+        // ===============================
+        // SEND EMAIL VIA PHPMailer
+        // ===============================
+
+        
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'burcejosh19@gmail.com';
+            $mail->Password   = 'mwbt bwct grds fvsr';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = 587;
+
+            $mail->setFrom('burcejosh19@gmail.com', 'STA CRUZ WD');
+            $mail->addAddress($email, "$first_name $last_name");
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Your Staff Account Password';
+            $mail->Body    = "
+                Hello $first_name,<br><br>
+                Your staff account has been created.<br>
+                <b>Username:</b> $username<br>
+                <b>Password:</b> $plain_password<br><br>
+                You can <a href='$resetLink'>click here to change your password</a> or use the generated password.<br><br>
+                Thanks,<br>
+                Admin Team
+            ";
+
+            $mail->send();
+            echo json_encode(['status'=>'success','message'=>'User added and email sent successfully.']);
+
+        } catch (Exception $e) {
+            echo json_encode(['status'=>'error','message'=>"User added but email could not be sent. Mailer Error: {$mail->ErrorInfo}"]);
+        }
+
     } else {
-        echo json_encode([
-            'status'=>'error',
-            'message'=>'Insert failed: '.$stmt->error
-        ]);
+        echo json_encode(['status'=>'error','message'=>'Insert failed: '.$stmt->error]);
     }
 
     $stmt->close();

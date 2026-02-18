@@ -1,9 +1,16 @@
-<?php 
-require 'function/check_session.php';
+<?php
+session_start();
 
-// Call the checkSession function to perform session validation
-checkSession();
+function checkSession() {
+    // Check if user_id exists
+    if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+        // Redirect to login page if not logged in
+        header("Location: login.html"); // or login.php
+        exit();
+    }
+}
 ?>
+
 <head>
 
     <meta charset="utf-8">

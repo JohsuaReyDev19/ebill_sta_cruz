@@ -109,7 +109,7 @@
                                                     if ($deleted == 0) {
                                                         $deleted_text = "<p class='badge-success text-center rounded-pill'>ACTIVE</p>";
                                                     } elseif ($deleted == 1) {
-                                                        $deleted_text = "<p class='badge-danger text-center rounded-pill'>DELETED</p>";
+                                                        $deleted_text = "<p class='badge-danger text-center rounded-pill'>SUSPEND</p>";
                                                     }
 
                                                     if ($role == 1) {
@@ -198,12 +198,12 @@
                 const email = decodeURIComponent(button.data('user-email'));
 
                 Swal.fire({
-                    title: 'Restore Deleted User Account?',
+                    title: 'Restore Suspend User Account?',
                     html: `
                         <strong>Name:</strong> ${name}<br>
                         <strong>Username:</strong> ${username}<br>
                         <strong>Email:</strong> ${email}<br><br>
-                        Are you sure you want to restore this account?`,
+                        Are you sure you want to suspend this account?`,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '##f6c23e', // Orange

@@ -38,7 +38,9 @@
                                 <div class="card-header py-3 d-flex flex-column flex-md-row">
                                     <div class="col-12 col-md-6 d-flex align-items-center justify-content-start mx-0 px-0 mb-2 mb-md-0">
                                         <h6 class="font-weight-bold text-primary mb-0">List of Billing Schedule</h6>
+                                        
                                     </div>
+                                    
                                     <div class="col-12 col-md-6 d-flex align-items-center justify-content-end mx-0 px-0">
                                         <div class="col-12 col-md-4 float-right mx-0 px-0">
                                             <a data-toggle="modal" data-target="#addNew" class="btn btn-success shadow-sm w-100 h-100"><i class="fa-solid fa-plus mr-1"></i>Add Billing Schedule</a>
@@ -48,16 +50,18 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered nowrap" id="myTable" width="100%" cellspacing="0">
+                                        <table  id="billingScheduleTable" class="table table-bordered nowrap" id="myTable" width="100%" cellspacing="0" style="font-size: 13px; color: black;">
                                             <thead class="">
                                                 <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Billing Schedule</th>
                                                     <th scope="col">Reading Date</th>
-                                                    <th scope="col">Date Covered (From - To)</th>
+                                                    <th scope="col">Covered (From)</th>
+                                                    <th scope="col">Covered (To)</th>
                                                     <th scope="col">Date Due</th>
                                                     <th scope="col">Date Disconnection</th>
-                                                    <th scope="col">Active</th>
+                                                    <th scope="col">Zone Book</th>
+                                                    <th scope="col">Status</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
@@ -73,7 +77,8 @@
                                                         date_covered_from, 
                                                         date_covered_to, 
                                                         date_due, 
-                                                        date_disconnection, 
+                                                        date_disconnection,
+                                                        zonebook_id, 
                                                         set_active 
                                                     FROM billing_schedule_settings 
                                                     WHERE deleted = 0
@@ -90,18 +95,33 @@
                                                     $date_covered_to = $row['date_covered_to'];
                                                     $date_due = $row['date_due'];
                                                     $date_disconnection = $row['date_disconnection'];
+                                                    $zonebook = $row['zonebook_id'];
                                                     $set_active = $row['set_active'];
                                                 ?>
                                                 <tr>
                                                     <td><?php echo $counter; ?></td>
-                                                    <td><?php echo htmlspecialchars(date('F Y', strtotime($date_due))); ?></td>
-                                                    <td><?php echo htmlspecialchars(date('F d, Y', strtotime($reading_date))); ?></td>
-                                                    <td>
-                                                        <?php echo htmlspecialchars(date('F d, Y', strtotime($date_covered_from))); ?> - 
-                                                        <?php echo htmlspecialchars(date('F d, Y', strtotime($date_covered_to))); ?>
-                                                    </td>
-                                                    <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_due))); ?></td>
-                                                    <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_disconnection))); ?></td>
+                                                        <td><?php echo htmlspecialchars(date('F Y', strtotime($date_due))); ?></td>
+                                                        <td><?php echo htmlspecialchars(date('F d, Y', strtotime($reading_date))); ?></td>
+                                                        <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_covered_from))); ?></td>
+                                                        <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_covered_to))); ?></td>
+                                                        <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_due))); ?></td>
+                                                        <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_disconnection))); ?></td>
+                                                        <td>
+                                                            <?php 
+                                                            if ($zonebook == 0) {
+                                                                echo "No Zone/Book Assigned";
+                                                            } else {
+                                                                $zoneQuery = "SELECT zonebook FROM zonebook_settings WHERE zonebook_id = $zonebook AND deleted = 0 LIMIT 1";
+                                                                $zoneResult = mysqli_query($con, $zoneQuery);
+                                                                if ($zoneResult && mysqli_num_rows($zoneResult) > 0) {
+                                                                    $row_zone = mysqli_fetch_assoc($zoneResult);
+                                                                    echo htmlspecialchars($row_zone['zonebook']);
+                                                                } else {
+                                                                    echo "Unknown Zone";
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </td>
                                                     <td class="text-center">
                                                         <?php if ($set_active == 1): ?>
                                                             <span class="badge badge-success">Active</span>
@@ -110,10 +130,11 @@
                                                         <?php endif; ?>
                                                     </td>
                                                     <td class="text-center">
-                                                        <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edit_<?php echo $billing_schedule_id; ?>">
+                                                        
+                                                        <?php if ($set_active == 1) { ?>
+                                                        <a class="btn btn-sm btn-primary disabled" data-toggle="modal" data-target="#edit_<?php echo $billing_schedule_id; ?>">
                                                             <i class="fa-solid fa-edit"></i>
                                                         </a>
-                                                        <?php if ($set_active == 1) { ?>
                                                             <a 
                                                                 href="#" 
                                                                 class="btn btn-sm btn-secondary disabled" 
@@ -124,7 +145,7 @@
                                                                 data-schedule-disconnection="<?php echo htmlspecialchars(date('F Y', strtotime($date_disconnection))); ?>">
                                                                 <i class="fa-solid fa-check"></i> Set Active
                                                             </a>
-                                                            <a 
+                                                            <!-- <a 
                                                                 href="#" 
                                                                 class="btn btn-sm btn-danger disabled" 
                                                                 data-schedule-id="<?php echo $billing_schedule_id; ?>" 
@@ -133,8 +154,11 @@
                                                                 data-schedule-to="<?php echo htmlspecialchars(date('F Y', strtotime($date_covered_to))); ?>" 
                                                                 data-schedule-disconnection="<?php echo htmlspecialchars(date('F Y', strtotime($date_disconnection))); ?>">
                                                                 <i class="fa-solid fa-trash"></i>
-                                                            </a>
+                                                            </a> -->
                                                         <?php }else{ ?>
+                                                        <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edit_<?php echo $billing_schedule_id; ?>">
+                                                            <i class="fa-solid fa-edit"></i>
+                                                        </a>
                                                             <a 
                                                                 href="#" 
                                                                 class="btn btn-sm btn-success set-active-btn" 
@@ -145,7 +169,7 @@
                                                                 data-schedule-disconnection="<?php echo htmlspecialchars(date('F Y', strtotime($date_disconnection))); ?>">
                                                                 <i class="fa-solid fa-check"></i> Set Active
                                                             </a>
-                                                            <a 
+                                                            <!-- <a 
                                                                 href="#" 
                                                                 class="btn btn-sm btn-danger delete-billing-btn" 
                                                                 data-schedule-id="<?php echo $billing_schedule_id; ?>" 
@@ -155,7 +179,7 @@
                                                                 data-schedule-to="<?php echo htmlspecialchars(date('F Y', strtotime($date_covered_to))); ?>" 
                                                                 data-schedule-disconnection="<?php echo htmlspecialchars(date('F Y', strtotime($date_disconnection))); ?>">
                                                                 <i class="fa-solid fa-trash"></i>
-                                                            </a>
+                                                            </a> -->
                                                         <?php } ?>
                                                     </td>
                                                 </tr>
@@ -207,10 +231,34 @@
                 scrollX: true
             })
         });
+
+        
+
     </script>
 
     <!-- Add Billiing Schedule -->
     <script>
+        $(document).ready(function() {
+            var table = $('#billingScheduleTable').DataTable({
+                "order": [[1, "desc"]]
+            });
+
+            $('#zonebook_id').on('change', function() {
+                var zoneId = $(this).val(); // now this is the ID
+
+                table.rows().every(function() {
+                    var rowZone = $(this.node()).data('zone-id');
+                    if (zoneId === "" || zoneId == rowZone || (zoneId == "0" && rowZone == 0)) {
+                        $(this.node()).show();
+                    } else {
+                        $(this.node()).hide();
+                    }
+                });
+
+                table.draw(false);
+            });
+        });
+
         $(document).ready(function() {
             // Function to show SweetAlert2 warning message
             const showWarningMessage = (message) => {

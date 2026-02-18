@@ -429,6 +429,43 @@
                         return;
                     }
 
+                    // let description = 'Change Name';
+                    // // Fetch rate first
+                    // return fetch("action/get-rates-charge.php", {
+                    //     method: "POST",
+                    //     headers: {
+                    //         "Content-Type": "application/x-www-form-urlencoded"
+                    //     },
+                    //     body: "description=" + encodeURIComponent(description)
+                    // })
+                    // .then(response => response.json())
+                    // .then(data => {
+
+                    //     if (data.status !== "success") {
+                    //         throw new Error("Rate not found.");
+                    //     }
+
+                    //     let rate = parseFloat(data.rate).toFixed(2);
+
+                    //     return {
+                    //         status: value,
+                    //         description: description,
+                    //         rate: rate
+                    //     };
+                    // })
+
+                    // $.ajax({
+                    //     url: 'action/add_other_material.php',
+                    //     method: 'POST',
+                    //     data:{
+                    //         meters_id: meterId,
+                    //         units_included: "Change Name",
+                    //         units: "0",
+                    //         quantity: "1",
+                    //         price_per_unit: rate,
+                    //         remarks: `${description} Charge`,
+                    //     }
+                    // });
                     $.ajax({
                         url: 'action/update_concessionaire.php',
                         type: 'POST',

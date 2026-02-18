@@ -18,6 +18,8 @@ $query = $con->prepare("
         END AS service_status,
         CONCAT(cst.first_name, ' ', cst.last_name) AS account_name,
         cst.discount,
+        cst.discount_senior,
+        cst.discount_pwd,
         acst.account_type, 
         csst.classification, 
         bst.barangay,

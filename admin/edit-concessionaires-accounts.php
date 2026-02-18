@@ -324,7 +324,7 @@
     <script>
     document.addEventListener("click", function(e) {
 
-        if (e.target.classList.contains("change-status-btn")) {
+            if (e.target.classList.contains("change-status-btn")) {
 
             let meterId = e.target.dataset.meterId;
             let meterName = e.target.dataset.meterName;

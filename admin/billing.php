@@ -74,16 +74,33 @@
 														</div>
 
 														<div class="col-lg-2 col-md-4 col-sm-6 col-12 mb-2">
-                                                            <select class="form-control form-control-sm w-100"
-                                                                    id="filterBarangay">
-                                                                <option value="" selected>All Barangay</option>
+															<select class="form-control form-control-sm w-100"
+																	id="filterBarangay"
+																	name="filterBarangay">
 
-                                                                <option value="BIAY">BIAY</option>
-                                                                <option value="PAGATPAT">PAGATPAT</option>
-                                                                <option value="TUBOTUBO NORTH">TUBOTUBO NORTH</option>
-                                                                <option value="LUCAPON SOUTH">LUCAPON SOUTH</option>
-                                                            </select>
-                                                        </div>
+																<option value="" selected>All Barangay</option>
+
+																<?php
+																	require '../db/dbconn.php';
+
+																	$query = "SELECT barangay_id, barangay 
+																			FROM barangay_settings 
+																			WHERE deleted = 0 
+																			ORDER BY barangay ASC";
+
+																	$result = mysqli_query($con, $query);
+
+																	if ($result) {
+																		while ($row = mysqli_fetch_assoc($result)) {
+																			echo '<option value="'.htmlspecialchars($row['barangay']).'">'
+																					. htmlspecialchars($row['barangay']) .
+																				'</option>';
+																		}
+																	}
+																?>
+															</select>
+														</div>
+
 
 
 														<!-- Zone / Book -->

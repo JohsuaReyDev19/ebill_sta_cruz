@@ -273,46 +273,69 @@
     </script>
 
     <script>
-        // Open camera function
-        document.getElementById('openCameraBtn').addEventListener('click', function() {
-            const cameraCard = document.getElementById('cameraCard');
-            const cameraFeed = document.getElementById('cameraFeed');
+    let cameraStream = null;
 
-            // Show the camera card and start the video stream
-            cameraCard.style.display = 'block';
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then((stream) => {
-                    cameraFeed.srcObject = stream;
-                })
-                .catch((err) => {
-                    alert('Error accessing camera: ' + err.message);
-                });
-        });
+    const cameraCaptured = document.getElementById('cameraCaptured');
+    const cameraCard = document.getElementById('cameraCard');
+    const cameraFeed = document.getElementById('cameraFeed');
 
-        // Capture image function
-        document.getElementById('captureBtn').addEventListener('click', function() {
-            const canvas = document.getElementById('canvas');
-            const cameraFeed = document.getElementById('cameraFeed');
-            const context = canvas.getContext('2d');
-            
-            // Set canvas size to the video feed dimensions
-            canvas.width = cameraFeed.videoWidth;
-            canvas.height = cameraFeed.videoHeight;
-            context.drawImage(cameraFeed, 0, 0, canvas.width, canvas.height);
+    // Open camera
+    document.getElementById('openCameraBtn').addEventListener('click', function() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                cameraStream = stream;
+                cameraFeed.srcObject = stream;
 
-            // Convert canvas to image URL
-            const imageUrl = canvas.toDataURL('image/png');
-            document.getElementById('profilePreview').src = imageUrl;
+                // Hide preview and show camera
+                $('#cameraCaptured').addClass('d-none');
+                cameraCard.style.display = 'block';
+            })
+            .catch((err) => {
+                alert('Error accessing camera: ' + err.message);
+            });
+    });
 
-            // Stop the video stream after capturing
-            cameraFeed.srcObject.getTracks().forEach(track => track.stop());
-            
-            // Hide the camera card after capturing
-            document.getElementById('cameraCard').style.display = 'none';
-        });
-    </script>
+    // Capture image
+    document.getElementById('captureBtn').addEventListener('click', function() {
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
 
-    <script>
+        canvas.width = cameraFeed.videoWidth;
+        canvas.height = cameraFeed.videoHeight;
+        context.drawImage(cameraFeed, 0, 0, canvas.width, canvas.height);
+        
+
+        // Update profile preview
+        document.getElementById('profilePreview').src = canvas.toDataURL('image/png');
+
+        stopCamera();
+    });
+
+    // Close camera without capturing
+    document.getElementById('closeCameraBtn').addEventListener('click', stopCamera);
+
+    function stopCamera() {
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+            cameraStream = null;
+        }
+        cameraFeed.srcObject = null;
+
+        // Hide camera and show preview again
+        cameraCard.style.display = 'none';
+        cameraCaptured.style.display = 'flex';
+    }
+
+    // Update file input label
+    document.getElementById('profileUpload').addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name || "Choose an image";
+        document.getElementById('profileLabel').textContent = fileName;
+    });
+</script>
+
+
+<script>
+
         $('#profileUpload').on('change', function() {
                 const fileInput = $(this)[0];
                 const file = fileInput.files[0];
@@ -346,12 +369,9 @@
                 }
             });
 document.getElementById("addUserForm").addEventListener("submit", function(e) {
-
-
     e.preventDefault();
-
-    let form = this;
-    let formData = new FormData(form);
+    const form = this;
+    const formData = new FormData(form);
 
     Swal.fire({
         title: 'Processing...',
@@ -362,53 +382,54 @@ document.getElementById("addUserForm").addEventListener("submit", function(e) {
         }
     });
 
-    fetch("action/add-staff.php", {   // 🔥 PUT YOUR REAL PHP FILE PATH HERE
+    fetch("action/add-staff.php", {
         method: "POST",
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(async response => {
+        const text = await response.text(); // raw response
+        let data;
+        try {
+            data = JSON.parse(text); // try parse JSON
+        } catch(e) {
+            console.error("Invalid JSON from server:", text);
+            throw new Error("Invalid JSON");
+        }
 
         Swal.close();
 
-        if (data.status === "success") {
-
+        if(data.status === "success"){
             Swal.fire({
                 icon: "success",
                 title: "User Added!",
                 text: data.message,
                 confirmButtonColor: "#3085d6"
             });
-
             form.reset();
-
+            // Reset profile preview if needed
+            document.getElementById('profilePreview').src = "";
+            $('#profileLabel').text('Choose an image');
         } else {
-
             Swal.fire({
                 icon: "warning",
-                title: "Opps",
+                title: "Oops",
                 text: data.message,
                 confirmButtonColor: "#d33"
             });
-
         }
-
     })
     .catch(error => {
-
         Swal.close();
-
         Swal.fire({
             icon: "error",
             title: "Request Failed",
             text: "Server error. Please try again.",
         });
-
         console.error(error);
     });
 });
-</script>
 
+</script>
 
 
 </body>

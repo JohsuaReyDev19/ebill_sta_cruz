@@ -9,13 +9,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date_covered_to = mysqli_real_escape_string($con, $_POST['date_covered_to']);
     $date_due = mysqli_real_escape_string($con, $_POST['date_due']);
     $date_disconnection = mysqli_real_escape_string($con, $_POST['date_disconnection']);
+    $zonebook = mysqli_real_escape_string($con, $_POST['zonebook_id']);
 
     $updateSql = "UPDATE meters SET deleted = 0";
 
 
     // SQL query to insert new concessionaire
-    $sql = "INSERT INTO `billing_schedule_settings`(`reading_date`, `date_covered_from`, `date_covered_to`, `date_due`, `date_disconnection`) 
-    VALUES ('$reading_date', '$date_covered_from', '$date_covered_to', '$date_due', '$date_disconnection')";
+    $sql = "INSERT INTO `billing_schedule_settings`(`reading_date`, `date_covered_from`, `date_covered_to`, `date_due`, `date_disconnection`, `zonebook_id`) 
+    VALUES ('$reading_date', '$date_covered_from', '$date_covered_to', '$date_due', '$date_disconnection', '$zonebook')";
 
     // Execute the query
     if (mysqli_query($con, $sql) AND mysqli_query($con, $updateSql)) {

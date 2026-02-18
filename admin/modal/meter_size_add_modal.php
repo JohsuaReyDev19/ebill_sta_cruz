@@ -23,6 +23,30 @@
                                 Please input a valid Meter Size.
                             </div>
                         </div>
+                        <div class="form-group mb-3">
+                            <label class="control-label modal-label" for="meter_brand">Meter Brand</label>
+                            <select name="meter_brand" id="meter_brand_id" class="form-control mt-2" required>
+                                <option value="" selected disabled>Select Meter Brand</option>
+                                <?php
+                                require '../db/dbconn.php';
+
+                                // Fetch meter brands
+                                $query = "SELECT meter_brand_id, meter_brand 
+                                        FROM meter_brand_settings 
+                                        WHERE deleted = 0 
+                                        ORDER BY meter_brand ASC";
+                                $result = mysqli_query($con, $query);
+
+                                if ($result) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        echo '<option value="'. htmlspecialchars($row['meter_brand']) .'">' 
+                                            . htmlspecialchars($row['meter_brand']) 
+                                            . '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
 
                         <div class="form-group mb-3">
                             <label class="control-label modal-label" for="unit_price">Unit Price</label>

@@ -311,6 +311,7 @@ $price_matrix_result = $con->query(
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        
                         <div class="col-md-6 mb-3">
                             <label>Meter Size</label>
                             <select name="meter_size_id" id="edit_meter_size_id" class="form-control" required>
@@ -383,6 +384,13 @@ $price_matrix_result = $con->query(
                             <form id="addPriceMatrixForm" method="POST" action="">
                                 <div class="modal-body">
                                     <div class="row">
+                                        <!-- <div class="col-md-6 mb-3">
+                                            <label>Classification</label>
+                                            <input type="number" step="0.01" name="classification_id" id="classification_id" class="form-control" required>
+                                        </div><div class="col-md-6 mb-3">
+                                            <label>Meter Size</label>
+                                            <input type="number" step="0.01" name="meter_size_id" id="meter_size_id" class="form-control" required>
+                                        </div> -->
                                         <div class="col-md-6 mb-3">
                                             <label class="font-weight-bold">Classification</label>
                                             <select name="classification_id" class="form-control" required>

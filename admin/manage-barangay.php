@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="col-12 col-md-6 d-flex align-items-center justify-content-end mx-0 px-0">
                                         <div class="col-12 col-md-4 float-right mx-0 px-0">
-                                            <a data-toggle="modal" data-target="#addNew" class="btn btn-success shadow-sm w-100 h-100"><i class="fa-solid fa-plus mr-1"></i>Add Zone/Book</a>
+                                            <a data-toggle="modal" data-target="#addNew" class="btn btn-success shadow-sm w-100 h-100"><i class="fa-solid fa-plus mr-1"></i>Add Barangay</a>
                                         </div>
                                     </div>
                                 </div>
@@ -53,8 +53,9 @@
                                                 <tr>
                                                   
                                                     <th scope="col">#</th>                                        
-                                                    <th scope="col">Zone/Book</th>                                        
-                                                    <th scope="col">Remarks</th>                                               
+                                                    <th scope="col">Barangay</th>
+                                                    <th scope="col">Zone</th>                                        
+                                                    <th scope="col">Municipality</th>                                               
                                                     <th scope="col">Action</th>                             
                                                    
                                                 </tr>
@@ -65,45 +66,64 @@
                                             <?php
                                                 require '../db/dbconn.php';
 
-                                                $display_zonebook = "SELECT * FROM zonebook_settings WHERE deleted = 0";
-                                                $sqlQuery = mysqli_query($con, $display_zonebook) or die(mysqli_error($con));
+                                                $display_barangay = "
+                                                    SELECT 
+                                                        b.barangay_id,
+                                                        b.barangay,
+                                                        b.zonebook_id,
+                                                        z.zonebook,
+                                                        m.citytownmunicipality
+                                                    FROM barangay_settings b
+                                                    LEFT JOIN zonebook_settings z 
+                                                        ON b.zonebook_id = z.zonebook_id
+                                                        AND z.deleted = 0
+                                                    LEFT JOIN citytownmunicipality_settings m 
+                                                        ON b.citytownmunicipality_id = m.citytownmunicipality_id
+                                                        AND m.deleted = 0
+                                                    WHERE b.deleted = 0
+                                                ";
+
+                                                $sqlQuery = mysqli_query($con, $display_barangay) or die(mysqli_error($con));
 
                                                 $counter = 1;
 
-                                                while($row = mysqli_fetch_array($sqlQuery)) {
-                                                    // Fetch all fields into variables
-                                                    $zonebook_id = $row['zonebook_id'];
-                                                    $zonebook = $row['zonebook'];
-                                                    $zonebook_remarks = $row['zonebook_remarks'];
-                                                    
-                                            ?>
+                                                while($row = mysqli_fetch_assoc($sqlQuery)) {
 
-                                                <tr>
-                                                    <td><?php echo $counter; ?></td>
-                                                    <td><?php echo htmlspecialchars($zonebook); ?></td>
-                                                    <td><?php echo htmlspecialchars($zonebook_remarks); ?></td>
-                                                    <td class="text-center">
-                                                        <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edit_<?php echo $zonebook_id; ?>"><i class="fa-solid fa-edit"></i></a>
-                                                        <a href="#" class="btn btn-sm btn-danger delete-zonebook-btn"
-                                                           data-zonebook-id="<?php echo $zonebook_id; ?>"
-                                                           data-zonebook-name="<?php echo htmlspecialchars($zonebook); ?>"
-                                                           data-zonebook-remarks="<?php echo htmlspecialchars($zonebook_remarks); ?>">
-                                                           <i class="fa-solid fa-trash"></i>
-                                                        </a>
+                                                    $barangay_id = $row['barangay_id'];
+                                                    $barangay = $row['barangay'];
+                                                    $zone = $row['zonebook']; // ✅ This shows the zone name, not the ID
+                                                    $municipality = $row['citytownmunicipality'];
+                                                ?>
+                                                <tr style="color: black;">
+                                                    <td><?= $counter++; ?></td>
+                                                    <td><?= htmlspecialchars($barangay); ?></td>
+                                                    <td><?= htmlspecialchars($zone); ?></td>
+                                                    <td><?= htmlspecialchars($municipality); ?></td>
+                                                    <td>
+                                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#edit_<?= $barangay_id ?>">Edit</button>
+                                                        
+                                                        <button class="btn btn-danger btn-sm delete-Barangay-btn"
+                                                            data-barangay-id="<?= $barangay_id ?>"
+                                                            data-barangay-name="<?= htmlspecialchars($barangay); ?>"
+                                                            data-zone-name="<?= htmlspecialchars($zone); ?>"
+                                                            data-municipality-name="<?= htmlspecialchars($municipality); ?>">
+                                                            Delete
+                                                        </button>
                                                     </td>
                                                 </tr>
+
                                                 <?php
-                                                    $counter++;
-                                                   include('modal/zonebook_edit_modal.php');
+                                                include('modal/Barangay_edit_modal.php');
                                                 }
                                                 ?>
+
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <?php include('modal/zonebook_add_modal.php'); ?>
+                        <?php include('modal/Barangay_add_modal.php'); ?>
                     </div>
                     
                 </div>
@@ -153,7 +173,7 @@ $(document).ready(function () {
         });
     };
 
-    $('#addZoneBook').on('click', function (e) {
+    $('#addBarangay').on('click', function (e) {
         e.preventDefault();
 
         const form = $('#addNew form');
@@ -176,7 +196,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: 'action/add_zonebook.php',
+            url: 'action/add_barangay.php',
             type: 'POST',
             data: form.serialize(),
             dataType: 'json', // ✅ IMPORTANT
@@ -185,7 +205,7 @@ $(document).ready(function () {
                 if (res.status === 'success') {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Zone/Book added successfully!',
+                        title: 'Barangay added successfully!',
                         confirmButtonText: 'OK'
                     }).then(() => location.reload());
 
@@ -193,7 +213,7 @@ $(document).ready(function () {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Duplicate Entry',
-                        text: 'Zone/Book already exists!'
+                        text: 'Barangay already exists!'
                     });
 
                 } else if (res.status === 'empty') {
@@ -202,7 +222,7 @@ $(document).ready(function () {
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Failed to add Zone/Book',
+                        title: 'Failed to add Barangay',
                         text: 'Please try again later.'
                     });
                 }
@@ -225,65 +245,72 @@ $(document).ready(function () {
 
     <!-- Delete Zone/Book -->
     <script>
-        $(document).ready(function() {
-            // Function for deleting event
-            $('.delete-zonebook-btn').on('click', function(e) {
-                e.preventDefault();
+$(document).ready(function () {
 
-                var deleteButton = $(this);
-                var classificationID = deleteButton.data('zonebook-id');
-                var classificationName = decodeURIComponent(deleteButton.data('zonebook-name'));
-                var classificationRemarks = decodeURIComponent(deleteButton.data('zonebook-remarks'));
+    
 
-                Swal.fire({
-                    title: 'Delete Zone/Book',
-                    html: "You are about to delete the following Zone/Book:<br><br>" +
-                          "<strong>Zone/Book:</strong> " + classificationName + "<br>" +
-                          "<strong>Zone/Book Remarks:</strong> " + classificationRemarks + "<br>",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes, delete!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: 'action/delete_zonebook.php',
-                            type: 'POST',
-                            data: {
-                                zonebook_id: classificationID
-                            },
-                            success: function(response) {
-                                if (response.trim() === 'success') {
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'Zone/Book has been deleted.',
-                                        'success'
-                                    ).then(() => {
-                                        location.reload();
-                                    });
-                                } else {
-                                    Swal.fire(
-                                        'Error!',
-                                        'Failed to delete Zone/Book.',
-                                        'error'
-                                    );
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                                Swal.fire(
-                                    'Error!',
-                                    'Failed to delete Zone/Book.',
-                                    'error'
-                                );
-                            }
-                        });
+    // Use event delegation (FIX FOR PAGINATION)
+    $('#myTable').on('click', '.delete-Barangay-btn', function (e) {
+        e.preventDefault();
+
+        var deleteButton = $(this);
+        var barangayID = deleteButton.data('barangay-id');
+        var barangayName = decodeURIComponent(deleteButton.data('barangay-name'));
+        var municipality = decodeURIComponent(deleteButton.data('barangay-remarks'));
+
+        Swal.fire({
+            title: 'Delete Barangay',
+            html: "You are about to delete:<br><br>" +
+                  "<strong>Barangay:</strong> " + barangayName + "<br>" +
+                  "<strong>Municipality:</strong> " + municipality + "<br>",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete!'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    url: 'action/delete_barangay.php',
+                    type: 'POST',
+                    data: { zonebook_id: barangayID },
+                    success: function (response) {
+
+                        if (response.trim() === 'success') {
+
+                            Swal.fire(
+                                'Deleted!',
+                                'Barangay has been deleted.',
+                                'success'
+                            ).then(() => {
+
+                                // REMOVE ROW WITHOUT RELOAD (better)
+                                table
+                                    .row(deleteButton.closest('tr'))
+                                    .remove()
+                                    .draw(false);
+                                    
+
+                            });
+
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to delete Barangay.',
+                                'error'
+                            );
+                        }
                     }
                 });
-            });
+            }
         });
-    </script>
+    });
+
+});
+</script>
+
 
     <!-- Edit Zone/Book -->
     <script>
@@ -298,7 +325,7 @@ $(document).ready(function () {
             };
 
             // Delegate click event handling to a parent element
-            $(document).on('click', '[id^="updateZoneBook_"]', function(e) {
+            $(document).on('click', '[id^="updateBarangay_"]', function(e) {
                 e.preventDefault(); // Prevent default form submission
                 var userID = $(this).attr('id').split('_')[1]; // Extract event ID
                 var formData = $('#updateForm_' + userID); // Get the form data
@@ -330,7 +357,7 @@ $(document).ready(function () {
                 
                 if (fieldsAreValid) {
                     $.ajax({
-                        url: 'action/update_zonebook.php', // URL to submit the form data
+                        url: 'action/update_Barangay.php', // URL to submit the form data
                         type: 'POST',
                         data: formData.serialize(), // Form data to be submitted
                         dataType: 'json',
@@ -356,7 +383,7 @@ $(document).ready(function () {
                         error: function(xhr, status, error) {
                             // Handle the error response
                             console.error(xhr.responseText); // Output error response to console (for debugging)
-                            showSweetAlert('error', 'Error', 'Failed to update Zone/Book. Please try again later.');
+                            showSweetAlert('error', 'Error', 'Failed to update Barangay. Please try again later.');
                         }
                     });
                 }

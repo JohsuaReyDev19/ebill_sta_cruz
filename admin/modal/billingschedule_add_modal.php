@@ -55,6 +55,36 @@
                                 Please input a valid disconnection date.
                             </div>
                         </div>
+                        <div class="form-group mb-3">
+                            <label class="control-label modal-label" for="date_disconnection">Zone Book</label>
+                            <select class="form-control"
+                                    name="zonebook_id"
+                                    id="zonebook_id"
+                                    required>
+                                    
+                                <option value="" selected disabled>Select zone/book</option>
+                                <?php
+                                    require '../db/dbconn.php';
+
+                                    $query = "SELECT zonebook_id, zonebook 
+                                            FROM zonebook_settings 
+                                            WHERE deleted = 0 
+                                            ORDER BY zonebook ASC";
+
+                                    $result = mysqli_query($con, $query);
+
+                                    if ($result) {
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            echo '<option value="'.htmlspecialchars($row['zonebook']).'">'
+                                                    . htmlspecialchars($row['zonebook']) .
+                                                '</option>';
+                                        }
+                                    }
+                                ?>
+                                <option value="0">Accounts with no Zone/Book Assigned</option>
+
+                            </select>
+                        </div>
 
                     </div>
                 </div>

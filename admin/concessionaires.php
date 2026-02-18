@@ -85,7 +85,13 @@
                     </div>
 
                     <div class="modal-body">
-                        Are you sure you want to edit this concessionaire profile?
+                        <!-- Are you sure you want to edit this concessionaire profile? -->
+                        <div class="form-check form-check-lg">
+                            <input class="form-check-input" type="checkbox" name="system_settings" value="1" id="system_settings">
+                            <label class="form-check-label" for="system_settings">
+                                <i class="fas fa-cogs me-1"></i> Check if you want add charge for changing/edit information
+                            </label>
+                        </div>
                     </div>
 
                     <div class="modal-footer">

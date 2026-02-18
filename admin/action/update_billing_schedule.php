@@ -12,6 +12,7 @@ if (isset($_POST['billing_schedule_id']) && is_numeric($_POST['billing_schedule_
     $date_covered_to = mysqli_real_escape_string($con, $_POST['date_covered_to']);
     $date_due = mysqli_real_escape_string($con, $_POST['date_due']);
     $date_disconnection = mysqli_real_escape_string($con, $_POST['date_disconnection']);
+    $zonebook = mysqli_real_escape_string($con, $_POST['zonebook_id']);
 
     // Update the classification_settings with the new values
     $sql = "UPDATE billing_schedule_settings SET 
@@ -19,7 +20,8 @@ if (isset($_POST['billing_schedule_id']) && is_numeric($_POST['billing_schedule_
             date_covered_from='$date_covered_from', 
             date_covered_to='$date_covered_to', 
             date_due='$date_due', 
-            date_disconnection='$date_disconnection'
+            date_disconnection='$date_disconnection',
+            zonebook_id='$zonebook'
             WHERE billing_schedule_id='$billing_schedule_id'";
 
     // Execute the query

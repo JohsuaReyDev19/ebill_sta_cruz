@@ -53,7 +53,8 @@
                                                 <tr>
                                                   
                                                     <th scope="col">#</th>                                        
-                                                    <th scope="col">Meter Size</th>                                        
+                                                    <th scope="col">Meter Size</th>
+                                                    <th scope="col">Meter Brannd</th>                                        
                                                     <th scope="col">Unit Price <small>(for change of water meter and initial installation)</small></th>                                        
                                                     <th scope="col">Remarks</th>                                               
                                                     <th scope="col">Action</th>                             
@@ -75,6 +76,7 @@
                                                     // Fetch all fields into variables
                                                     $meter_size_id = $row['meter_size_id'];
                                                     $meter_size = $row['meter_size'];
+                                                    $meter_brand = $row['meter_brand'];
                                                     $unit_price = $row['unit_price'];
                                                     $meter_size_remarks = $row['meter_size_remarks'];
                                                     
@@ -83,6 +85,7 @@
                                                 <tr>
                                                     <td><?php echo $counter; ?></td>
                                                     <td><?php echo htmlspecialchars($meter_size); ?></td>
+                                                    <td><?php echo htmlspecialchars($meter_brand); ?></td>
                                                     <td><?php echo htmlspecialchars("₱" . $unit_price); ?></td>
                                                     <td><?php echo htmlspecialchars($meter_size_remarks); ?></td>
                                                     <td class="text-center">
