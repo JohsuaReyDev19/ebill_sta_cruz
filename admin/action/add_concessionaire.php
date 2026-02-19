@@ -113,12 +113,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $middle_name = mysqli_real_escape_string($con, $_POST['middle_name'] ?? '');
             $suffix_name = mysqli_real_escape_string($con, $_POST['suffix_name'] ?? '');
             $gender = mysqli_real_escape_string($con, $_POST['gender'] ?? '');
-            $discount = mysqli_real_escape_string($con, $_POST['discount'] ?? '');
+            // $discount = mysqli_real_escape_string($con, $_POST['discount'] ?? '');
             $id_number = mysqli_real_escape_string($con, $_POST['id_number'] ?? '');
 
             // ✅ FIXED CHECKBOX HANDLING (0 or 1)
-            $pwd = isset($_POST['check-input-pwd']) ? 1 : 0;
-            $senior = isset($_POST['check-input-senior']) ? 1 : 0;
+            $discount = isset($_POST['discount']) ? 'Pwd' : NULL;
 
             $sql_concessionaire = "INSERT INTO concessionaires (
                 last_name, first_name, middle_name, suffix_name, gender,
@@ -126,14 +125,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 same_address, home_citytownmunicipality_id, home_barangay_id, home_sitio, home_street, home_housebuilding_no,
                 billing_citytownmunicipality_id, billing_barangay_id, billing_sitio, billing_street, billing_housebuilding_no,
                 contact_no, email, date_added, profile,
-                discount, discount_senior, discount_pwd, id_number
+                discount, id_number
             ) VALUES (
                 '$last_name', '$first_name', '$middle_name', '$suffix_name', '$gender',
                 '', '', 0,
                 '$same_address', '$home_citytown', '$home_barangay', '$home_sitio', '$home_street', '$home_house_no',
                 '$billing_citytown', '$billing_barangay', '$billing_sitio', '$billing_street', '$billing_house_no',
                 '$contact_no', '$email', '$date_added', '$file_name',
-                '$discount', $senior, $pwd, '$id_number'
+                '$discount', '$id_number'
             )";
         }
 

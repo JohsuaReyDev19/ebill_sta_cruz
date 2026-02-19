@@ -73,6 +73,27 @@
 															</select>
 														</div>
 
+														
+
+
+
+														<!-- Zone / Book -->
+														<div class="col-lg-2 col-md-4 col-sm-6 col-12 mb-2">
+															<select class="form-control form-control-sm w-100"
+																	name="zonebook_id"
+																	id="zonebook_id"
+																	required>
+																<option value="" selected disabled>Select zone/book</option>
+																<?php
+																$result = $con->query("SELECT * FROM zonebook_settings WHERE deleted = 0");
+																while ($row = $result->fetch_assoc()) {
+																	echo "<option value='{$row['zonebook_id']}'>{$row['zonebook']}</option>";
+																}
+																?>
+																<option value="0">Accounts with no Zone/Book Assigned</option>
+															</select>
+														</div>
+
 														<div class="col-lg-2 col-md-4 col-sm-6 col-12 mb-2">
 															<select class="form-control form-control-sm w-100"
 																	id="filterBarangay"
@@ -98,25 +119,6 @@
 																		}
 																	}
 																?>
-															</select>
-														</div>
-
-
-
-														<!-- Zone / Book -->
-														<div class="col-lg-2 col-md-4 col-sm-6 col-12 mb-2">
-															<select class="form-control form-control-sm w-100"
-																	name="zonebook_id"
-																	id="zonebook_id"
-																	required>
-																<option value="" selected disabled>Select zone/book</option>
-																<?php
-																$result = $con->query("SELECT * FROM zonebook_settings WHERE deleted = 0");
-																while ($row = $result->fetch_assoc()) {
-																	echo "<option value='{$row['zonebook_id']}'>{$row['zonebook']}</option>";
-																}
-																?>
-																<option value="0">Accounts with no Zone/Book Assigned</option>
 															</select>
 														</div>
 

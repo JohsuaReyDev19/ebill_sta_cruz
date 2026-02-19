@@ -73,21 +73,15 @@
                 <hr>
                 <div class="form-group mb-2">
                     <label class="form-label" id="addCons">-- optional -- For Discount</label>
-                    <select class="form-control custom-select" name="discount" id="inputFields" hidden>
+                    <!-- <select class="form-control custom-select" name="discount" id="inputFields" hidden>
                         <option value="" selected>-- select discount --</option>
                         <option value="Pwd">Pwd</option>
                         <option value="Senior">Senior</option>
-                    </select>
+                    </select> -->
                     <div class="form-check">
-                        <input class="check-input-pwd" type="checkbox" name="check-input-pwd" id="check-input-pwd" value="Pwd">
+                        <input class="check-input-pwd" type="checkbox" name="discount" id="check-input-pwd" value="Pwd">
                         <label class="pwd-check-label font-weight-bold" for="check-input-pwd">
-                            Pwd
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="check-input-senior" type="checkbox" name="check-input-senior" id="check-input-senior" value="Senior">
-                        <label class="senior-check-label font-weight-bold" for="check-input-senior">
-                            Senior
+                            Pwd/Senior
                         </label>
                     </div>
                 </div>

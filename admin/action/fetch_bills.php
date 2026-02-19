@@ -159,6 +159,22 @@ if ($result->num_rows > 0) {
                 $finalAmount = $amount - $discountAmount;
             }
         }
+        // if(!empty($row['discount_pwd'])){
+        //     $pwd = '';
+
+        //     if($row['discount_pwd'] == 1){
+        //         $pwd = "Pwd";
+        //     }
+        //     $stmtRate = $con->prepare("SELECT rate FROM rates WHERE description = ?");
+        //     $stmtRate->bind_param("s", $pwd);
+        //     $stmtRate->execute();
+        //     $resultRate = $stmtRate->get_result();
+
+        //     $discountAmount = $amount * $discountRate;
+
+        //     $finalAmount = $amount - $discountAmount;
+
+        // }
 
 
         
