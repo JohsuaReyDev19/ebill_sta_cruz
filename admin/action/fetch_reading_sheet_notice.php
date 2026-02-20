@@ -6,7 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
     $zonebook_id = intval($_POST['zonebook_id']);
     $billing_schedule_id = intval($_POST['billing_schedule_id']);
 
-    // ===================== Fetch billed readings =====================
     $sql = "
         SELECT
             mrt.meter_reading_id,
@@ -39,23 +38,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
             mpm.charge_51_up,
             m.meters_id
         FROM meter_reading_tbl mrt
-        INNER JOIN meters m
-            ON mrt.meters_id = m.meters_id
-        INNER JOIN concessionaires c
-            ON m.concessionaires_id = c.concessionaires_id
-        LEFT JOIN barangay_settings b
-            ON c.home_barangay_id = b.barangay_id AND b.deleted = 0
-        LEFT JOIN zonebook_settings z
-            ON m.zonebook_id = z.zonebook_id
-        INNER JOIN billing_schedule_settings bsst
-            ON bsst.billing_schedule_id = mrt.billing_schedule_id
-        LEFT JOIN meter_size_settings ms
-            ON m.meter_size_id = ms.meter_size_id AND ms.deleted = 0
-        LEFT JOIN classification_settings cs
-            ON m.classification_id = cs.classification_id AND cs.deleted = 0
-        LEFT JOIN manage_price_matrix mpm
-            ON mpm.classification = cs.classification AND mpm.meter_size = ms.meter_size
-        WHERE m.zonebook_id = ? AND mrt.billing_schedule_id = ? AND mrt.billed = 1 AND m.deleted = 0 AND c.deleted = 0
+        INNER JOIN meters m ON mrt.meters_id = m.meters_id
+        INNER JOIN concessionaires c ON m.concessionaires_id = c.concessionaires_id
+        LEFT JOIN barangay_settings b ON c.home_barangay_id = b.barangay_id AND b.deleted = 0
+        LEFT JOIN zonebook_settings z ON m.zonebook_id = z.zonebook_id
+        INNER JOIN billing_schedule_settings bsst ON bsst.billing_schedule_id = mrt.billing_schedule_id
+        LEFT JOIN meter_size_settings ms ON m.meter_size_id = ms.meter_size_id AND ms.deleted = 0
+        LEFT JOIN classification_settings cs ON m.classification_id = cs.classification_id AND cs.deleted = 0
+        LEFT JOIN manage_price_matrix mpm ON mpm.classification = cs.classification AND mpm.meter_size = ms.meter_size
+        WHERE m.zonebook_id = ?
+          AND mrt.billing_schedule_id = ?
+          AND mrt.billed = 1
+          AND m.deleted = 0
+          AND c.deleted = 0
     ";
 
     $stmt = $con->prepare($sql);
@@ -72,70 +67,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
             $currentReading  = floatval($row['current_reading'] ?? 0);
             $consumed = max(0, $currentReading - $previousReading);
 
-            // =================== Calculate Amount Due ===================
-            $price = floatval($row['minimum_price'] ?? 0);
-            $charge_0 = floatval($row['charge_0'] ?? 0);
-            $charge_11_20 = floatval($row['charge_11_20'] ?? 0);
-            $charge_21_30 = floatval($row['charge_21_30'] ?? 0);
-            $charge_31_40 = floatval($row['charge_31_40'] ?? 0);
-            $charge_41_50 = floatval($row['charge_41_50'] ?? 0);
-            $charge_51_up = floatval($row['charge_51_up'] ?? 0);
-    
-            if ($consumed <= 10) $amountDue = $price;
-            elseif ($consumed <= 20) $amountDue = $price + (($consumed - $charge_0) * $charge_11_20);
-            elseif ($consumed <= 30) $amountDue = $price + (($consumed - $charge_0) * $charge_21_30);
-            elseif ($consumed <= 40) $amountDue = $price + (($consumed - $charge_0) * $charge_31_40);
-            elseif ($consumed <= 50) $amountDue = $price + (($consumed - $charge_0) * $charge_41_50);
-            else $amountDue = $price + (($consumed - $charge_0) * $charge_51_up);
+            $price         = floatval($row['minimum_price'] ?? 0);
+            $charge_0      = floatval($row['charge_0'] ?? 0);
+            $charge_11_20  = floatval($row['charge_11_20'] ?? 0);
+            $charge_21_30  = floatval($row['charge_21_30'] ?? 0);
+            $charge_31_40  = floatval($row['charge_31_40'] ?? 0);
+            $charge_41_50  = floatval($row['charge_41_50'] ?? 0);
+            $charge_51_up  = floatval($row['charge_51_up'] ?? 0);
 
-            $finalAmount = $amountDue;
-
-            // =================== Apply Discount ===================
-            if (!empty($row['discount'])) {
-                $stmtRate = $con->prepare("SELECT rate FROM rates WHERE description = ?");
-                $stmtRate->bind_param("s", $row['discount']);
-                $stmtRate->execute();
-                $resultRate = $stmtRate->get_result();
-                if ($resultRate->num_rows > 0) {
-                    $rateRow = $resultRate->fetch_assoc();
-                    $discountRate = (float)$rateRow['rate'];
-                    $discountAmount = $amountDue * $discountRate;
-                    $finalAmount -= $discountAmount;
-                }
+            // ===================== Compute Base Amount =====================
+            if ($consumed <= 10) {
+                $amountDue = $price;
+            } elseif ($consumed <= 20) {
+                $amountDue = $price + (($consumed - $charge_0) * $charge_11_20);
+            } elseif ($consumed <= 30) {
+                $amountDue = $price + (($consumed - $charge_0) * $charge_21_30);
+            } elseif ($consumed <= 40) {
+                $amountDue = $price + (($consumed - $charge_0) * $charge_31_40);
+            } elseif ($consumed <= 50) {
+                $amountDue = $price + (($consumed - $charge_0) * $charge_41_50);
+            } else {
+                $amountDue = $price + (($consumed - $charge_0) * $charge_51_up);
             }
 
-            // =================== Arrears Per Month ===================
+            // Initialize final amount
+            $finalAmount = $amountDue;
+
+            // ===================== Apply Discount =====================
+            $discountDescription = $row['discount'] ?? '';
+            $discountRate = 0;
+            $discountAmount = 0;
+
+            if (!empty($discountDescription)) {
+
+                $stmtRate = $con->prepare("SELECT rate FROM rates WHERE description = ?");
+                $stmtRate->bind_param("s", $discountDescription);
+                $stmtRate->execute();
+                $resultRate = $stmtRate->get_result();
+
+                if ($resultRate->num_rows > 0) {
+                    $rateRow = $resultRate->fetch_assoc();
+                    $discountRate = floatval($rateRow['rate']);
+
+                    $discountAmount = $amountDue * $discountRate;
+                    $finalAmount = max(0, $amountDue - $discountAmount);
+                }
+
+                $stmtRate->close();
+            }
+
+            // ===================== Arrears =====================
             $arrears_stmt = $con->prepare("
                 SELECT bsst.reading_date, mrt.reading AS current_reading
                 FROM meter_reading_tbl mrt
                 INNER JOIN billing_schedule_settings bsst
                     ON mrt.billing_schedule_id = bsst.billing_schedule_id
-                WHERE mrt.meters_id = ? AND mrt.billed = 0 AND mrt.deleted = 0 AND bsst.deleted = 0
+                WHERE mrt.meters_id = ?
+                  AND mrt.billed = 0
+                  AND mrt.deleted = 0
+                  AND bsst.deleted = 0
                 ORDER BY bsst.reading_date ASC
             ");
+
             $arrears_stmt->bind_param("i", $row['meters_id']);
             $arrears_stmt->execute();
             $arrears_result = $arrears_stmt->get_result();
 
             $arrears_display = [];
+
             while ($a = $arrears_result->fetch_assoc()) {
+
                 $monthYear = date('F Y', strtotime($a['reading_date']));
-                // Calculate consumption for arrears
-                $prev = 0; // You can enhance to get previous reading
-                $curr = floatval($a['current_reading']);
-                $consumedArrears = max(0, $curr - $prev);
-
-                // Using same price matrix for arrears amount
-                if ($consumedArrears <= 10) $amt = $price;
-                elseif ($consumedArrears <= 20) $amt = $price + (($consumedArrears - $charge_0) * $charge_11_20);
-                elseif ($consumedArrears <= 30) $amt = $price + (($consumedArrears - $charge_0) * $charge_21_30);
-                elseif ($consumedArrears <= 40) $amt = $price + (($consumedArrears - $charge_0) * $charge_31_40);
-                elseif ($consumedArrears <= 50) $amt = $price + (($consumedArrears - $charge_0) * $charge_41_50);
-                else $amt = $price + (($consumedArrears - $charge_0) * $charge_51_up);
-
-                $arrears_display[] = "$monthYear (₱" . number_format($amt, 2) . ")";
+                $arrears_display[] = $monthYear;
             }
-            $arrears_display_str = count($arrears_display) ? implode(', ', $arrears_display) : 'N/A';
+
+            $arrears_stmt->close();
+
+            $arrears_display_str = count($arrears_display)
+                ? implode(', ', $arrears_display)
+                : 'N/A';
 
             // =================== Build Data ===================
             $data[] = [
@@ -151,7 +161,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                 'current_reading'  => number_format($currentReading, 2),
                 'consumed'         => number_format($consumed, 2),
                 'amount_due'       => '₱' . number_format($finalAmount, 2),
-                'arrears'          => $arrears_display_str
+                'arrears'          => $arrears_display_str,
+                'discount_name'    => $discountDescription ?: 'N/A',
+                'discount_amount'  => $discountAmount > 0
+                    ? '₱' . number_format($discountAmount, 2)
+                    : 'N/A'
             ];
         }
 
@@ -165,6 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
     }
 
     $stmt->close();
+
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request.']);
 }

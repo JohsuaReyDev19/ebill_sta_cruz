@@ -189,7 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
                        style="padding:2px;height:30px;text-align:center;width:70px;">';
 
             $action = '
-                <span class="mr-2" id="totalAmount">₱874.00</span>
                 <button class="btn btn-sm btn-primary generate-bill"
                         data-account="'.$metersId.'">
                     Bill

@@ -85,7 +85,8 @@ $(document).ready(function () {
                             item.consumed,
                             item.reading_date,
                             item.amount_due,
-                            item.arrears
+                            item.arrears,
+                            item.discount_amount   // change this
                         ]);
                     });
 
@@ -147,7 +148,8 @@ $(document).ready(function () {
                 consumed: row.find("td:eq(8)").text().trim(),
                 reading_date: row.find("td:eq(9)").text().trim(),
                 amount_due: row.find("td:eq(10)").text().trim(),
-                arrears: row.find("td:eq(11)").text().trim()
+                arrears: row.find("td:eq(11)").text().trim(),
+                discount_amount: row.find("td:eq(12)").text().trim()
             });
         });
 
@@ -172,21 +174,89 @@ $(document).ready(function () {
         const SYSTEM_LOGO = "<?php echo isset($_SESSION['system_profile']) ? '../img/' . $_SESSION['system_profile'] : '../img/system_6965ed6ed6091.png'; ?>";
 
         let printContent = `<html><head><title>Water Bill Notice</title><style>
-            @page { size: A4; margin: 0; }
-            body { font-family: 'Courier New', monospace; margin: 0; }
-            .wrapper { display: flex; flex-wrap: wrap; }
-            .notice { width: 50%; height: 50vh; box-sizing: border-box; border: 1px dashed black; padding: 5mm; page-break-inside: avoid; }
-            .header-flex { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px; }
-            .logo img { width: 40px; height: 40px; }
-            .header-text { text-align: center; }
-            .title { font-size: 15px; font-weight: bold; }
-            .section-title { font-size: 13px; font-weight: bold; text-align: center; margin-top: 10px; }
-            .text { font-size: 12px; line-height: 1.4; }
-            .label { display: inline-block; width: 130px; }
-            .reminders { font-size: 10px; margin-top: 8px; text-align: justify; }
+            @page {
+    size: 102mm 152mm;   /* Exact 1/4 of A4 */
+    margin: 5mm;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    margin: 0;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.notice {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* HEADER */
+.header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 5px;
+}
+
+.logo img {
+    width: 30px;
+    height: 30px;
+}
+
+.header-text {
+    text-align: center;
+}
+
+/* FONT SIZES (your requested sizes) */
+.title {
+    font-size: 11pt;   /* Title */
+    font-weight: bold;
+}
+
+.section-title {
+    font-size: 9pt;   /* Bold text */
+    text-align: center;
+    margin-top: 5px;
+}
+
+.text {
+    font-size: 8pt;    /* Normal text */
+    line-height: 1.3;
+}
+
+.label {
+    display: inline-block;
+    width: 90px;
+}
+.label2 {
+    display: inline-block;
+    width: 130px;
+}
+
+.reminders {
+    font-size: 6pt;    /* Reminders */
+    margin-top: 5px;
+    text-align: justify;
+}
         </style></head><body><div class="wrapper">`;
 
         selectedAccounts.forEach(acc => {
+
+        let d = new Date(readingDate);
+        let yy = d.getFullYear().toString().slice(-2);
+        let mm = String(d.getMonth() + 1).padStart(2, '0');
+
+        let cleanAccountNo = acc.account_no.split('-')[0];
+
+        let billNo = yy + mm + cleanAccountNo;
+
+            console.log(acc.discount);
             printContent += `
             <div class="notice">
                 <div class="header-flex">
@@ -196,42 +266,63 @@ $(document).ready(function () {
                         <div class="text">Poblacion, Sta Cruz, Zambales<br>047-234-445 <a>stacruzwd@projectbeta.net</a></div>
                     </div>
                 </div>
-
-                <div class="section-title">SERVICE INFORMATION</div>
-                <div class="text">
-                    <span class="label">Account No.</span>: <b>${acc.account_no}</b><br>
+                <div><span style="font-size: 16px; margin-top: 8px;"><span style="font-size: 11px;">Bill No.</span> ${billNo}</span></div>
+                
+                <div class="text" style="margin-top: 8px;">
+                    <span class="label">Account No.</span>: ${acc.account_no}<br>
                     <span class="label">Account Name</span>: ${acc.account_name}<br>
                     <span class="label">Service Address</span>: ${acc.barangay}, Sta. Cruz, Zambales<br>
                     <span class="label">Rate Class</span>: Residential
                 </div>
 
-                <div class="section-title">METER INFORMATION</div>
-                <div class="text">
-                    <span class="label">Meter No.</span>: ${acc.meter_no}<br>
-                    <span class="label">Reading Date</span>: ${acc.reading_date}<br>
-                    <span class="label">Present Reading</span>: ${acc.current_reading}<br>
-                    <span class="label">Previous Reading</span>: ${acc.previous_reading}<br>
-                    <span class="label">Consumption</span>: ${acc.consumed}
-                </div>
-
                 <div class="section-title">BILLING SUMMARY</div>
                 <div class="text">
-                    <span class="label">Billing Period</span>: ${monthYear}<br>
-                    <span class="label">Rate meter</span>: 170.00<br>
-                    <span class="label">Total Consumption</span>: ${acc.consumed}<br>
-                    <span class="label">Discount</span>: ---<br>
-                    <span class="label">Arrears</span>: ${acc.arrears || 'N/A'}<br>
-                    <span class="label">Total Amount Due</span>: ${acc.amount_due}<br>
-                    <span class="label">Payment Due Date</span>: ${dueDate}
+                <span class="label">Billing Month</span>: ${monthYear}<br>
+                    <span class="label">Billing Period</span>: ${monthYear} -> ${monthYear}<br>
+                    <span class="label">Reading Date</span>: ${acc.reading_date}<br>
+                    <span class="label">Previous Reading</span>: ${acc.previous_reading}<br>
+                    <span class="label">Present Reading</span>: ${acc.current_reading}<br>
+                    <span class="label">Cubic Meter Consumed</span>: ${acc.consumed}
+                </div>
+
+                
+                <div class="text">
+                    
+                    <span class="label">Less Discount SC/PWD/MOV/SP</span>: ${acc.discount_amount || 'N/A'}<br>
+                    <span class="label">Arrears</span>: ${acc.arrears || '---'}<br>
+                </div>
+
+                <div class="section-title">OTHER FEES</div>
+                <table class="text" style="width: 100%; border-collapse: collapse; margin-top: 2px;">
+                    <thead>
+                        <tr>
+                            <td style="text-align: left; width: 40%;">Description</td>
+                            <td style="text-align: left; width: 20%;">Qty</td>
+                            <td style="text-align: right; width: 20%;">Unit Price</td>
+                            <td style="text-align: right; width: 25%;">Amount</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Hose</td>
+                            <td style="text-align: left;">2</td>
+                            <td style="text-align: right;">1000.00</td>
+                            <td style="text-align: right;">2000.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text" style="padding-top: 5px;">
+                    <span class="label2" >Total Amount Due</span> <span style="font-size: 16px;">${acc.amount_due}</span><br>
+                    <span class="label2" >Payment Due Date</span> <span style="font-size: 16px;">${dueDate}</span>
                 </div>
 
                 <div class="section-title">REMINDERS</div>
                 <div class="reminders">
-                    Please examine your bill carefully. If no complaint is made within 60 days of receipt,
-                    the bill is considered true and correct. SWD employees are not allowed to receive cash payments.
-                    Pay your bill via safe and convenient digital channels, e.g. Maya, GCash, and online banking.
-                    To avoid disconnection, please pay on time.
-                    Kindly disregard this notice if payment has been made.
+                    <span>1.APENALTY CHANGE of 10% is added to bill if paid after due date.</span><br>
+                    <span>3.Service maybe DISCONNECTED without further notice if payment is not made ON of BEFORE DUE DATE.</span><br>
+                    <span>4.Disconnected will be activated upon payment of all amounts due plus RECONNECTION FEE.</span><br>
+                    <span>5.Kindly Please pay you bill before DUE DATE to avoid penalty.</span><br>
+                    <span>6.Provide your contact number for text purposes.</span>
                 </div>
             </div>`;
         });
