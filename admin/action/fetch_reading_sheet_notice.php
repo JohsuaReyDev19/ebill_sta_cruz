@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
     $sql = "
         SELECT
             mrt.meter_reading_id,
+            m.house_hold_number AS house_no,
             mrt.reading_date,
             mrt.reading AS current_reading,
             (
@@ -21,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                 LIMIT 1
             ) AS previous_reading,
             m.account_no,
+            m.barangay,
             CONCAT(c.last_name, ', ', c.first_name) AS account_name,
             c.discount,
             COALESCE(b.barangay, 'N/A') AS barangay_name,
@@ -61,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
     $data = [];
 
     if ($result->num_rows > 0) {
+
         while ($row = $result->fetch_assoc()) {
 
             $previousReading = floatval($row['previous_reading'] ?? 0);
@@ -75,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
             $charge_41_50  = floatval($row['charge_41_50'] ?? 0);
             $charge_51_up  = floatval($row['charge_51_up'] ?? 0);
 
-            // ===================== Compute Base Amount =====================
+            /* ================= BASE COMPUTATION ================= */
+
             if ($consumed <= 10) {
                 $amountDue = $price;
             } elseif ($consumed <= 20) {
@@ -90,12 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                 $amountDue = $price + (($consumed - $charge_0) * $charge_51_up);
             }
 
-            // Initialize final amount
             $finalAmount = $amountDue;
 
-            // ===================== Apply Discount =====================
+            /* ================= DISCOUNT ================= */
+
             $discountDescription = $row['discount'] ?? '';
-            $discountRate = 0;
             $discountAmount = 0;
 
             if (!empty($discountDescription)) {
@@ -108,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                 if ($resultRate->num_rows > 0) {
                     $rateRow = $resultRate->fetch_assoc();
                     $discountRate = floatval($rateRow['rate']);
-
                     $discountAmount = $amountDue * $discountRate;
                     $finalAmount = max(0, $amountDue - $discountAmount);
                 }
@@ -116,9 +118,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                 $stmtRate->close();
             }
 
-            // ===================== Arrears =====================
+            /* ================= ARREARS ================= */
+
             $arrears_stmt = $con->prepare("
-                SELECT bsst.reading_date, mrt.reading AS current_reading
+                SELECT bsst.reading_date
                 FROM meter_reading_tbl mrt
                 INNER JOIN billing_schedule_settings bsst
                     ON mrt.billing_schedule_id = bsst.billing_schedule_id
@@ -136,9 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
             $arrears_display = [];
 
             while ($a = $arrears_result->fetch_assoc()) {
-
-                $monthYear = date('F Y', strtotime($a['reading_date']));
-                $arrears_display[] = $monthYear;
+                $arrears_display[] = date('F Y', strtotime($a['reading_date']));
             }
 
             $arrears_stmt->close();
@@ -147,12 +148,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                 ? implode(', ', $arrears_display)
                 : 'N/A';
 
-            // =================== Build Data ===================
+            /* ================= OTHER BILLING ================= */
+            $other_stmt = $con->prepare("
+                SELECT remarks, quantity, price_per_units, amount_due
+                FROM other_billing
+                WHERE meters_id = ?
+                  AND billed = 0
+                  AND deleted = 0
+            ");
+
+            $other_stmt->bind_param("i", $row['meters_id']);
+            $other_stmt->execute();
+            $other_result = $other_stmt->get_result();
+
+            $other_fees = [];
+            $other_total = 0;
+
+            while ($ob = $other_result->fetch_assoc()) {
+
+                $line_total = floatval($ob['amount_due']);
+                $other_total += $line_total;
+
+                $other_fees[] = [
+                    'description' => $ob['remarks'],
+                    'quantity'    => $ob['quantity'],
+                    'price'       => number_format($ob['price_per_units'], 2),
+                    'amount'      => number_format($line_total, 2)
+                ];
+            }
+
+            $other_stmt->close();
+
+            /* ================= FINAL BUILD ================= */
+
             $data[] = [
-                'checkbox'         => '<input type="checkbox" class="rowCheckbox" data-id="'.$row['meter_reading_id'].'">',
                 'account_no'       => $row['account_no'],
                 'account_name'     => $row['account_name'],
-                'barangay_name'    => $row['barangay_name'],
+                'barangay_name'    => $row['barangay'],
                 'meter_no'         => $row['meter_no'],
                 'zonebook'         => $row['zonebook'],
                 'reading_date'     => date('F d, Y', strtotime($row['reading_date'])),
@@ -160,21 +192,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                 'previous_reading' => number_format($previousReading, 2),
                 'current_reading'  => number_format($currentReading, 2),
                 'consumed'         => number_format($consumed, 2),
-                'amount_due'       => '₱' . number_format($finalAmount, 2),
+                'amount_due'       => number_format($finalAmount, 2),
                 'arrears'          => $arrears_display_str,
-                'discount_name'    => $discountDescription ?: 'N/A',
+                'discount_name'    => $discountDescription ?: '---',
                 'discount_amount'  => $discountAmount > 0
-                    ? '₱' . number_format($discountAmount, 2)
-                    : 'N/A'
+                    ? number_format($discountAmount, 2)
+                    : '0.00',
+                'house_no'         => $row['house_no'],
+                'other_fees'       => $other_fees,
+                'other_total'      => number_format($other_total, 2)
             ];
         }
 
         echo json_encode(['success' => true, 'data' => $data]);
 
     } else {
+
         echo json_encode([
             'success' => false,
-            'message' => 'No billed accounts found for the selected zone/book and billing schedule.'
+            'message' => 'No billed accounts found.'
         ]);
     }
 

@@ -27,6 +27,63 @@
                             </div>
                         </div>
 
+                        <div class="row form-group mb-3">
+                            <div class="col-12">
+                                <label class="control-label modal-label" for="account_no_<?php echo $meters_id; ?>">House No</label>
+                            </div>
+                            <div class="col-12">
+                                <input class="form-control" id="account_no_<?php echo $house_number; ?>" name="house_no" type="text" required value="<?php echo $house_number; ?>">
+                                <div class="invalid-feedback">
+                                    Please input a valid account no.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group mb-3">
+                            <div class="col-12">
+                                <label class="control-label modal-label" 
+                                    for="barangay_<?php echo $meters_id; ?>">
+                                    Barangay
+                                </label>
+                            </div>
+
+                            <div class="col-12">
+                                <select class="form-control form-control-sm w-100"
+                                        id="barangay_<?php echo $meters_id; ?>"
+                                        name="barangay"
+                                        required>
+
+                                    <option value="">-- Select Barangay --</option>
+
+                                    <?php
+                                        $query = "SELECT barangay 
+                                                FROM barangay_settings 
+                                                WHERE deleted = 0 
+                                                ORDER BY barangay ASC";
+
+                                        $result = mysqli_query($con, $query);
+
+                                        if ($result) {
+                                            while ($brgy = mysqli_fetch_assoc($result)) {
+
+                                                $selected = ($barangay == $brgy['barangay']) 
+                                                            ? 'selected' 
+                                                            : '';
+
+                                                echo '<option value="' . htmlspecialchars($brgy['barangay']) . '" ' . $selected . '>'
+                                                        . htmlspecialchars($brgy['barangay']) .
+                                                    '</option>';
+                                            }
+                                        }
+                                    ?>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Please select a barangay.
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Account Type -->
                         <div class="form-group mb-3">
                             <label class="control-label modal-label">Account Type</label>

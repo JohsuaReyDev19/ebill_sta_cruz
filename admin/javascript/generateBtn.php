@@ -72,23 +72,27 @@ $(document).ready(function () {
                     GLOBAL_COVERED_TO   = response.covered_to ?? '';
 
                     // Populate DataTable
-                    response.data.forEach(item => {
-                        table.row.add([
-                            item.checkbox,
-                            item.account_no,
-                            item.account_name,
-                            item.barangay_name,
-                            item.meter_no,
-                            item.zonebook,
-                            item.previous_reading,
-                            item.current_reading,
-                            item.consumed,
-                            item.reading_date,
-                            item.amount_due,
-                            item.arrears,
-                            item.discount_amount   // change this
-                        ]);
-                    });
+                    response.data.forEach(function(item) {
+
+                // Convert full row data to safe JSON string
+                let fullData = JSON.stringify(item)
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+
+                table.row.add([
+                    `<input type="checkbox" class="rowCheckbox" data-full='${fullData}'>`,
+                    item.account_no,
+                    item.account_name,
+                    item.barangay_name,
+                    item.meter_no,
+                    item.zonebook,
+                    item.previous_reading,
+                    item.current_reading,
+                    item.consumed,
+                    item.reading_date,
+                    item.amount_due
+                ]);
+            });
 
                     table.draw();
                     $("#printNoticeBilled").prop("disabled", false);
@@ -135,21 +139,27 @@ $(document).ready(function () {
         let selectedAccounts = [];
 
         $(".rowCheckbox:checked").each(function () {
-            let row = $(this).closest("tr");
+
+        console.log(JSON.parse($(this).attr("data-full")));
+
+            let acc = JSON.parse($(this).attr("data-full"));
 
             selectedAccounts.push({
-                account_no: row.find("td:eq(1)").text().trim(),
-                account_name: row.find("td:eq(2)").text().trim(),
-                barangay: row.find("td:eq(3)").text().trim(),
-                meter_no: row.find("td:eq(4)").text().trim(),
-                zonebook: row.find("td:eq(5)").text().trim(),
-                previous_reading: row.find("td:eq(6)").text().trim(),
-                current_reading: row.find("td:eq(7)").text().trim(),
-                consumed: row.find("td:eq(8)").text().trim(),
-                reading_date: row.find("td:eq(9)").text().trim(),
-                amount_due: row.find("td:eq(10)").text().trim(),
-                arrears: row.find("td:eq(11)").text().trim(),
-                discount_amount: row.find("td:eq(12)").text().trim()
+                account_no: acc.account_no,
+                account_name: acc.account_name,
+                barangay: acc.barangay_name,
+                meter_no: acc.meter_no,
+                zonebook: acc.zonebook,
+                previous_reading: acc.previous_reading,
+                current_reading: acc.current_reading,
+                consumed: acc.consumed,
+                reading_date: acc.reading_date,
+                amount_due: acc.amount_due,
+                arrears: acc.arrears,
+                discount_amount: acc.discount_amount,
+                house_no: acc.house_no,
+                other_fees: acc.other_fees || [],   // new
+                other_total : acc.other_total
             });
         });
 
@@ -252,9 +262,9 @@ body {
         let yy = d.getFullYear().toString().slice(-2);
         let mm = String(d.getMonth() + 1).padStart(2, '0');
 
-        let cleanAccountNo = acc.account_no.split('-')[0];
+        let randomNum = Math.floor(1000 + Math.random() * 9000); // 4 digits
 
-        let billNo = yy + mm + cleanAccountNo;
+        let billNo = yy + mm + randomNum;
 
             console.log(acc.discount);
             printContent += `
@@ -263,7 +273,7 @@ body {
                     <div class="logo"><img src="${SYSTEM_LOGO}"></div>
                     <div class="header-text">
                         <div class="title">STA CRUZ WATER DISTRICT</div>
-                        <div class="text">Poblacion, Sta Cruz, Zambales<br>047-234-445 <a>stacruzwd@projectbeta.net</a></div>
+                        <div class="text">Poblacion, Sta Cruz, Zambales<br>047-234-x445 <a>stacruzwd@projectbeta.net</a></div>
                     </div>
                 </div>
                 <div><span style="font-size: 16px; margin-top: 8px;"><span style="font-size: 11px;">Bill No.</span> ${billNo}</span></div>
@@ -272,14 +282,14 @@ body {
                     <span class="label">Account No.</span>: ${acc.account_no}<br>
                     <span class="label">Account Name</span>: ${acc.account_name}<br>
                     <span class="label">Address</span>: ${acc.barangay}, Sta. Cruz, Zambales<br>
-                    <span class="label">House No.</span>: 012<br>
+                    <span class="label">House No.</span>: ${acc.house_no}<br>
                     <span class="label">Rate Class</span>: Residential
                 </div>
 
                 <div class="section-title">BILLING SUMMARY</div>
                 <div class="text">
                 <span class="label">Billing Month</span>: ${monthYear}<br>
-                    <span class="label">Billing Period</span>: ${monthYear} -> ${monthYear}<br>
+                    <span class="label">Billing Period</span>: ${monthYear} -> ${dueDate}<br>
                     <span class="label">Reading Date</span>: ${acc.reading_date}<br>
                     <span class="label">Previous Reading</span>: ${acc.previous_reading}<br>
                     <span class="label">Present Reading</span>: ${acc.current_reading}<br>
@@ -294,24 +304,29 @@ body {
                 </div>
 
                 <div class="section-title">OTHER FEES</div>
-                <table class="text" style="width: 100%; border-collapse: collapse; margin-top: 2px;">
-                    <thead>
-                        <tr>
-                            <td style="text-align: left; width: 40%;">Description</td>
-                            <td style="text-align: left; width: 20%;">Qty</td>
-                            <td style="text-align: right; width: 20%;">Unit Price</td>
-                            <td style="text-align: right; width: 25%;">Amount</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Hose</td>
-                            <td style="text-align: left;">2</td>
-                            <td style="text-align: right;">1000.00</td>
-                            <td style="text-align: right;">2000.00</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table class="text" style="width: 100%; border-collapse: collapse; margin-top: 2px;">
+                        <thead>
+                            <tr>
+                                <td style="text-align: left; width: 40%;">Description</td>
+                                <td style="text-align: left; width: 20%;">Qty</td>
+                                <td style="text-align: right; width: 20%;">Unit Price</td>
+                                <td style="text-align: right; width: 25%;">Amount</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${acc.other_fees && acc.other_fees.length > 0
+                                ? acc.other_fees.map(fee => `
+                                    <tr>
+                                        <td style="font-size: 7px;">${fee.description}</td>
+                                        <td style="text-align: left; font-size: 7px;">${fee.quantity}</td>
+                                        <td style="text-align: right; font-size: 7px;">${fee.price}</td>
+                                        <td style="text-align: right; font-size: 7px;">${fee.amount}</td>
+                                    </tr>`).join('')
+                                : `<tr>
+                                        <td colspan="4" style="text-align: center; font-size: 8px;">No other fees</td>
+                                </tr>`}
+                        </tbody>
+                    </table>
                 <div class="text" style="padding-top: 5px;">
                     <span class="label2" >Total Amount Due</span> <span style="font-size: 16px;">${acc.amount_due}</span><br>
                     <span class="label2" >Payment Due Date</span> <span style="font-size: 16px;">${dueDate}</span>

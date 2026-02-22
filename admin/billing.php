@@ -294,7 +294,7 @@
 											            </th>
 	                                                    <th style="font-size: 12px;">Account No</th>                                        
 	                                                    <th style="font-size: 12px;">Account Name</th>  
-	                                                    <th style="font-size: 12px;">Barangay</th>                                        
+	                                                    <th style="font-size: 12px;">Barangay</th>                              
 	                                                    <th style="font-size: 12px;">Meter No</th>                                               
 	                                                    <th style="font-size: 12px;">Zone/Book</th>                            
 	                                                    <th style="font-size: 12px;">Previous Reading</th>                            

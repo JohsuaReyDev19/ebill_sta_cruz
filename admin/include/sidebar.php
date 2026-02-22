@@ -114,7 +114,7 @@ $system_profile = $_SESSION['system_profile'] ?? 'mmwd.png';
                 <!-- <a class="collapse-item" href="classification-settings.php?title=Classification">Classification</a> -->
                 <a class="collapse-item" href="manage-barangay.php?title=Manage Barangay">Manage Barangay's</a>
                 <!-- <a class="collapse-item" href="meter-brand-settings.php">Meter Brand</a> -->
-                <!-- <a class="collapse-item" href="manage-price-metrix.php?title=Manage Price Matrix">Manage Price Matrix</a> -->
+                <a class="collapse-item" href="manage-price-metrix.php?title=Manage Price Matrix">Manage Price Matrix</a>
                 <a class="collapse-item" href="meter-size-settings.php?title=Meter Size">Meter Size</a>
                 <!-- <a class="collapse-item" href="price-matrix-settings.php">Price Matrix</a> -->
                 <a class="collapse-item" href="other-price-matrix.php?title=Other Price Rate">Other Price Matrix</a>

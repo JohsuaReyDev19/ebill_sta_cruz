@@ -38,7 +38,8 @@
                                                                 WHEN ct.suffix_name != 'NA' THEN CONCAT(' ', ct.suffix_name)
                                                                 ELSE ''
                                                             END
-                                                        ) AS full_name
+                                                        ) AS full_name,
+														 ct.home_barangay_id
                                                     FROM `concessionaires` ct
                                                     WHERE ct.deleted = 0 
                                                       AND ct.concessionaires_id = '$concessionaires_id';
@@ -48,7 +49,16 @@
 
                         while($row = mysqli_fetch_array($sqlQuery)) {
                             $full_name = $row['full_name'];
+                            $barangay_id = $row['home_barangay_id'];
                         }
+
+						$display_barangay = "SELECT barangay FROM barangay_settings WHERE barangay_id = $barangay_id";
+
+						$queryBarangay = mysqli_query($con, $display_barangay) or die(mysqli_error($con));
+
+						while($row = mysqli_fetch_array($queryBarangay)){
+							$barangay = $row['barangay'];
+						}
                                 
                     ?>
 
@@ -68,7 +78,7 @@
                                 <!-- Card Header -->
                                 <div class="card-header py-3 d-flex flex-column flex-md-row">
                                     <div class="col-12 d-flex align-items-center justify-content-start mx-0 px-0 mb-2 mb-md-0">
-                                        <h6 class="font-weight-bold text-primary mb-0">New Account & Meter of <?php echo $full_name; ?></h6>
+                                        <h6 class="font-weight-bold text-primary mb-0">New Account & Meter of <?php echo $full_name; echo $barangay_id?></h6>
                                     </div>
                                 </div>
                                 <!-- Card Body -->
@@ -219,46 +229,57 @@
 									                            <div class="invalid-feedback">Please enter concessionaire's meter no.</div>
 									                        </div>
 
+															<!-- House No -->
+									                        <div class="form-group mb-3">
+									                            <label class="control-label modal-label">House No.</label>
+									                            <input type="text" class="form-control form-control-sm" name="house_no" required>
+									                            <div class="invalid-feedback">Please enter concessionaire's house no.</div>
+									                        </div>
+
 															<div class="form-group">
 																<input class="check-input-pwd" type="checkbox" name="discount" id="check-input-pwd" value="Pwd">
 																<label class="pwd-check-label font-weight-bold" for="check-input-pwd">
 																	Same as with Home Address
 																</label>
 															</div>
+															<div class="form-group" id="new_address">
+																<select class="form-control form-control-sm w-100"
+																		id="new_address"
+																		name="new_address">
+
+																	<option value="" selected>-- Select Barangay --</option>
+
+																	<?php
+																		require '../db/dbconn.php';
+
+																		$query = "SELECT barangay_id, barangay 
+																				FROM barangay_settings 
+																				WHERE deleted = 0 
+																				ORDER BY barangay ASC";
+
+																		$result = mysqli_query($con, $query);
+
+																		if ($result) {
+																			while ($row = mysqli_fetch_assoc($result)) {
+																				echo '<option value="'.htmlspecialchars($row['barangay']).'">'
+																						. htmlspecialchars($row['barangay']) .
+																					'</option>';
+																			}
+																		}
+																	?>
+																</select>
+															</div>
 
 															<div class="form-group d-none" id="ID_NO">
-															<select class="form-control form-control-sm w-100"
-																	id="filterBarangay"
-																	name="filterBarangay">
-
-																<option value="" selected>All Barangay</option>
-
-																<?php
-																	require '../db/dbconn.php';
-
-																	$query = "SELECT barangay_id, barangay 
-																			FROM barangay_settings 
-																			WHERE deleted = 0 
-																			ORDER BY barangay ASC";
-
-																	$result = mysqli_query($con, $query);
-
-																	if ($result) {
-																		while ($row = mysqli_fetch_assoc($result)) {
-																			echo '<option value="'.htmlspecialchars($row['barangay']).'">'
-																					. htmlspecialchars($row['barangay']) .
-																				'</option>';
-																		}
-																	}
-																?>
-															</select>
-														</div>
+																<input type="text" class="form-control form-control-sm" name="old_address" readonly value="<?php echo $barangay;?>">
+															</div>
+									                        <div class="invalid-feedback">Please enter concessionaire's Biling Address.</div>
 
 									                        <!-- Zone/Book -->
 									                        <div class="form-group mb-3">
 									                            <label class="control-label modal-label">Zone/Book</label>
 									                            
-									                            <select class="form-control custom-select custom-select-sm" name="zonebook" id="zonebook" disabled>
+									                            <select class="form-control custom-select custom-select-sm" name="zonebook" id="zonebook">
 									                                <option value="0" selected>Select zone/book</option>
 									                                <?php
 									                                $sqlFetchZoneBook = "SELECT * FROM zonebook_settings WHERE deleted = 0";
@@ -342,8 +363,10 @@
 			$('#check-input-pwd, #check-input-senior').on('change', function(){
                 if($(this).is(':checked')){
                     $('#ID_NO').removeClass('d-none');
+					$('#new_address').addClass('d-none');
                 }else{
                     $('#ID_NO').addClass('d-none');
+					$('#new_address').removeClass('d-none');
                 }
             });
 			// Get the concessionaire_id from PHP

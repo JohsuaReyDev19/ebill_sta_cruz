@@ -99,15 +99,30 @@
                                                 require '../config.php';
 
                                                 $display_account = "
-                                                                        SELECT mt.* , act.account_type, cst.classification, mst.meter_size, mbs.meter_brand, zs.zonebook, service_status_id
-                                                                        FROM `meters` mt
-                                                                        INNER JOIN `account_type_settings` act ON act.account_type_id = mt.account_type_id
-                                                                        INNER JOIN `classification_settings` cst ON cst.classification_id = mt.classification_id
-                                                                        INNER JOIN `meter_size_settings` mst ON mst.meter_size_id = mt.meter_size_id
-                                                                        INNER JOIN `meter_brand_settings` mbs ON mbs.meter_brand_id = mt.meter_brand_id
-                                                                        LEFT JOIN `zonebook_settings` zs ON zs.zonebook_id = mt.zonebook_id
-                                                                        WHERE mt.concessionaires_id = '$concessionaires_id' AND mt.deleted = 0
-                                                                    ";
+                                                    SELECT mt.*,
+                                                        act.account_type,
+                                                        cst.classification,
+                                                        mst.meter_size,
+                                                        mbs.meter_brand,
+                                                        zs.zonebook,
+                                                        bs.barangay,
+                                                        service_status_id
+                                                    FROM meters mt
+                                                    INNER JOIN account_type_settings act 
+                                                        ON act.account_type_id = mt.account_type_id
+                                                    INNER JOIN classification_settings cst 
+                                                        ON cst.classification_id = mt.classification_id
+                                                    INNER JOIN meter_size_settings mst 
+                                                        ON mst.meter_size_id = mt.meter_size_id
+                                                    INNER JOIN meter_brand_settings mbs 
+                                                        ON mbs.meter_brand_id = mt.meter_brand_id
+                                                    LEFT JOIN zonebook_settings zs 
+                                                        ON zs.zonebook_id = mt.zonebook_id
+                                                    LEFT JOIN barangay_settings bs
+                                                        ON bs.barangay = mt.barangay
+                                                    WHERE mt.concessionaires_id = '$concessionaires_id'
+                                                    AND mt.deleted = 0
+                                                ";
                                                 $sqlQuery = mysqli_query($con, $display_account) or die(mysqli_error($con));
 
                                                 $counter = 1;
@@ -118,6 +133,8 @@
                                                     $account_no = $row['account_no'];
                                                     $account_type_id_selected = $row['account_type_id'];
                                                     $classification_id_selected = $row['classification_id'];
+                                                    $house_number = $row['house_hold_number'];
+                                                    $barangay = $row['barangay'];
                                                     $meter_no = $row['meter_no'];
                                                     $meter_size_id_selected = $row['meter_size_id'];
                                                     $meter_brand_id_selected = $row['meter_brand_id'];
