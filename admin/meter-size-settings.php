@@ -40,7 +40,8 @@
                                         <h6 class="font-weight-bold text-primary mb-0">List of Meter Size</h6>
                                     </div>
                                     <div class="col-12 col-md-6 d-flex align-items-center justify-content-end mx-0 px-0">
-                                        <div class="col-12 col-md-4 float-right mx-0 px-0">
+                                        <div class="d-flex col-12 col-md-9 float-right mx-0 px-0">
+                                            <a href="meter-brand-settings.php" class="btn btn-secondary shadow-sm w-100 h-100 mr-2"><i class="fa-solid fa-plus mr-1"></i>Add Meter Brand</a>
                                             <a data-toggle="modal" data-target="#addNew" class="btn btn-success shadow-sm w-100 h-100"><i class="fa-solid fa-plus mr-1"></i>Add Meter Size</a>
                                         </div>
                                     </div>

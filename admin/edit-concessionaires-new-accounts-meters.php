@@ -219,11 +219,46 @@
 									                            <div class="invalid-feedback">Please enter concessionaire's meter no.</div>
 									                        </div>
 
+															<div class="form-group">
+																<input class="check-input-pwd" type="checkbox" name="discount" id="check-input-pwd" value="Pwd">
+																<label class="pwd-check-label font-weight-bold" for="check-input-pwd">
+																	Same as with Home Address
+																</label>
+															</div>
+
+															<div class="form-group d-none" id="ID_NO">
+															<select class="form-control form-control-sm w-100"
+																	id="filterBarangay"
+																	name="filterBarangay">
+
+																<option value="" selected>All Barangay</option>
+
+																<?php
+																	require '../db/dbconn.php';
+
+																	$query = "SELECT barangay_id, barangay 
+																			FROM barangay_settings 
+																			WHERE deleted = 0 
+																			ORDER BY barangay ASC";
+
+																	$result = mysqli_query($con, $query);
+
+																	if ($result) {
+																		while ($row = mysqli_fetch_assoc($result)) {
+																			echo '<option value="'.htmlspecialchars($row['barangay']).'">'
+																					. htmlspecialchars($row['barangay']) .
+																				'</option>';
+																		}
+																	}
+																?>
+															</select>
+														</div>
+
 									                        <!-- Zone/Book -->
 									                        <div class="form-group mb-3">
 									                            <label class="control-label modal-label">Zone/Book</label>
 									                            
-									                            <select class="form-control custom-select custom-select-sm" name="zonebook" id="zonebook">
+									                            <select class="form-control custom-select custom-select-sm" name="zonebook" id="zonebook" disabled>
 									                                <option value="0" selected>Select zone/book</option>
 									                                <?php
 									                                $sqlFetchZoneBook = "SELECT * FROM zonebook_settings WHERE deleted = 0";
@@ -304,6 +339,13 @@
 
 	<script>
 		$(document).ready(function () {
+			$('#check-input-pwd, #check-input-senior').on('change', function(){
+                if($(this).is(':checked')){
+                    $('#ID_NO').removeClass('d-none');
+                }else{
+                    $('#ID_NO').addClass('d-none');
+                }
+            });
 			// Get the concessionaire_id from PHP
 	        const concessionaireId = <?php echo json_encode($_GET['concessionaire_id']); ?>;
 

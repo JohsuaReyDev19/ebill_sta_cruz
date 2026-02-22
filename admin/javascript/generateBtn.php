@@ -271,7 +271,8 @@ body {
                 <div class="text" style="margin-top: 8px;">
                     <span class="label">Account No.</span>: ${acc.account_no}<br>
                     <span class="label">Account Name</span>: ${acc.account_name}<br>
-                    <span class="label">Service Address</span>: ${acc.barangay}, Sta. Cruz, Zambales<br>
+                    <span class="label">Address</span>: ${acc.barangay}, Sta. Cruz, Zambales<br>
+                    <span class="label">House No.</span>: 012<br>
                     <span class="label">Rate Class</span>: Residential
                 </div>
 
@@ -318,7 +319,7 @@ body {
 
                 <div class="section-title">REMINDERS</div>
                 <div class="reminders">
-                    <span>1.APENALTY CHANGE of 10% is added to bill if paid after due date.</span><br>
+                    <span>1.A PENALTY CHANGE of 10% is added to bill if paid after due date.</span><br>
                     <span>3.Service maybe DISCONNECTED without further notice if payment is not made ON of BEFORE DUE DATE.</span><br>
                     <span>4.Disconnected will be activated upon payment of all amounts due plus RECONNECTION FEE.</span><br>
                     <span>5.Kindly Please pay you bill before DUE DATE to avoid penalty.</span><br>

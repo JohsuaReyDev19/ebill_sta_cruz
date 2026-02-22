@@ -156,7 +156,10 @@
                                                         ?>
                                                     </td>
                                                     <td class="text-center">
-                                                        <a class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#edit_<?php echo $meters_id; ?>"><i class="fa-solid fa-edit"></i> Edit Account</a>
+                                                        <a class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#edit_<?php echo $meters_id; ?>"><i class="fa-solid fa-edit"></i> 
+                                                        Edit Account
+                                                    </a>
+
                                                         <a href="edit-concessionaires-accounts-change-meters.php?title=Account Meter Info&concessionaire_id=<?php echo urlencode($_GET['id']); ?>&meters_id=<?php echo urlencode($encryptedData);
                                                         ?>" class="btn btn-sm btn-success shadow-sm"><i class="fa-solid fa-gauge-simple"></i> Change Meter</a>
                                                         <button class="btn btn-sm btn-warning shadow-sm change-status-btn"
