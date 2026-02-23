@@ -62,10 +62,10 @@ $system_profile = $_SESSION['system_profile'] ?? 'mmwd.png';
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Billing</h6>
                 <a class="collapse-item" href="billing.php?title=Billing System">Water Billing</a>
-                <a class="collapse-item" href="other-billing.php?title=Other Billing">Other Billing</a>
+                <a class="collapse-item" href="other-billing.php?title=Other Charges">Other Charges</a>
             </div>
         </div>
-    </li>
+    </li>   
     <?php endif; ?>
 
     <!-- Collecting System -->

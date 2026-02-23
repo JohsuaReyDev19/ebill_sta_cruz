@@ -18,7 +18,7 @@
                                 }elseif($title == "Billing System"){
                                     echo '<i class="fas fa-fw fa-receipt"></i>';
                                     echo $title;
-                                }elseif($title == "Other Billing"){
+                                }elseif($title == "Other Charges"){
                                     echo '<i class="fas fa-fw fa-receipt"></i>';
                                     echo $title;
                                 }elseif($title == "Collecting System"){

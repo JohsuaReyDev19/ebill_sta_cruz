@@ -243,30 +243,160 @@
         // capuring id
         $('#addReading').on('show.bs.modal', function (event) {
 
-            let button = $(event.relatedTarget); // Button that triggered modal
-            let billingId = button.data('id');   // Get the data-id
+            let button = $(event.relatedTarget);
+            let billingId = button.data('id');
 
             $('#billing_schedule_id').val(billingId);
 
             loadReadingSchedule(billingId);
         });
 
+        // Clear table when modal closes
         $('#addReading').on('hidden.bs.modal', function () {
             $('#readingTableBody').html('');
+            resetForm();
         });
 
         function loadReadingSchedule(billingId) {
 
             $.ajax({
-                url: 'action/fetch_reading_schedule.php', // Separate PHP file
+                url: 'action/fetch_reading_schedule.php',
                 type: 'POST',
                 data: { billing_schedule_id: billingId },
                 success: function(response) {
-                    $('#readingTableBody').html(response); // Populate table body
+                    $('#readingTableBody').html(response);
                 }
             });
+
         }
 
+        $(document).on("click", ".deleteRow", function () {
+
+            let row = $(this).closest("tr");
+            let readingId = $(this).data("id");
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This reading schedule will be deleted.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: "action/delete_reading.php",
+                        type: "POST",
+                        data: {
+                            reading_schedule_id: readingId
+                        },
+                        success: function (response) {
+
+                            if (response.trim() === "success") {
+
+                                row.fadeOut(300, function () {
+                                    $(this).remove();
+                                });
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Deleted!",
+                                    text: "Reading schedule has been removed.",
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+
+                            } else {
+                                Swal.fire(
+                                    "Error!",
+                                    "Delete failed.",
+                                    "error"
+                                );
+                            }
+
+                        }
+                    });
+
+                }
+
+            });
+
+        });
+
+        $(document).on("click", ".editRow", function () {
+
+            let readingId = $(this).data("id");
+            let readingDate = $(this).data("reading");
+            let coveredFrom = $(this).data("from");
+            let coveredTo = $(this).data("to");
+            let zoneId = $(this).data("zone");
+
+            $("#reading_schedule_id").val(readingId);
+            $("#reading_date").val(readingDate);
+            $("#date_covered_from").val(coveredFrom);
+            $("#date_covered_to").val(coveredTo);
+            $("select[name='zonebook_id']").val(zoneId);
+
+            $("#addRowBtn")
+                .text("Update")
+                .removeClass("btn-success")
+                .addClass("btn-warning");
+
+        });
+
+
+        $("#addRowBtn").click(function () {
+
+            let readingId = $("#reading_schedule_id").val();
+            let billingId = $("#billing_schedule_id").val();
+            let readingDate = $("#reading_date").val();
+            let coveredFrom = $("#date_covered_from").val();
+            let coveredTo = $("#date_covered_to").val();
+            let zoneId = $("select[name='zonebook_id']").val();
+
+            if (!readingDate || !coveredFrom || !coveredTo || !zoneId) {
+                Swal.fire("Warning", "Please fill all fields.", "warning");
+                return;
+            }
+
+            $.ajax({
+                url: "action/save_reading.php",
+                type: "POST",
+                data: {
+                    reading_schedule_id: readingId,
+                    billing_schedule_id: billingId,
+                    reading_date: readingDate,
+                    date_covered_from: coveredFrom,
+                    date_covered_to: coveredTo,
+                    zonebook_id: zoneId
+                },
+                success: function (response) {
+
+                    if (response.trim() === "success") {
+
+                        Swal.fire({
+                            icon: "success",
+                            title: readingId ? "Updated!" : "Added!",
+                            text: "Reading schedule saved successfully.",
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        loadReadingSchedule(billingId);
+                        resetForm();
+
+                    } else {
+                        Swal.fire("Error!", "Save failed.", "error");
+                    }
+
+                }
+            });
+
+        });
     </script>
 
     <!-- Add Billiing Schedule -->

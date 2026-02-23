@@ -26,10 +26,18 @@ while ($row = mysqli_fetch_assoc($result)) {
             : $row['zonebook']; ?>
     </td>
     <td>
-        <button class="btn btn-danger btn-sm deleteRow"
+        <button class="btn btn-primary btn-sm editRow"
+                data-id="<?= $row['reading_schedule_id']; ?>"
+                data-reading="<?= $row['reading_date']; ?>"
+                data-from="<?= $row['date_covered_from']; ?>"
+                data-to="<?= $row['date_covered_to']; ?>"
+                data-zone="<?= $row['zonebook_id']; ?>">
+            Edit    
+        </button>
+        <a class="btn btn-danger btn-sm deleteRow"
                 data-id="<?= $row['billing_schedule_id']; ?>">
             Delete
-        </button>
+        </a>
     </td>
 </tr>
 <?php } ?>

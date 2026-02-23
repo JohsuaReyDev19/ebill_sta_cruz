@@ -237,7 +237,7 @@
                             success: function (response) {
                                 if (response.trim() === 'success') {
                                     Swal.fire({
-                                        title: 'Deleted!',
+                                        title: 'Suspended!',
                                         text: 'User account has been Suspended successfully.',
                                         icon: 'success'
                                     }).then(() => {
