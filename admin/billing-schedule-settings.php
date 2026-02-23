@@ -42,7 +42,8 @@
                                     </div>
                                     
                                     <div class="col-12 col-md-6 d-flex align-items-center justify-content-end mx-0 px-0">
-                                        <div class="col-12 col-md-4 float-right mx-0 px-0">
+                                        <div class="col-12 col-md-4  float-right mx-0 px-0">
+                                            <!-- <a data-toggle="modal" data-target="#addNew" class="btn btn-success shadow-sm w-100 h-100 mr-2"><i class="fa-solid fa-plus mr-1"></i>Reading Schedule</a> -->
                                             <a data-toggle="modal" data-target="#addNew" class="btn btn-success shadow-sm w-100 h-100"><i class="fa-solid fa-plus mr-1"></i>Add Billing Schedule</a>
                                         </div>
                                     </div>
@@ -55,12 +56,11 @@
                                                 <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Billing Schedule</th>
-                                                    <th scope="col">Reading Date</th>
                                                     <th scope="col">Covered (From)</th>
                                                     <th scope="col">Covered (To)</th>
                                                     <th scope="col">Date Due</th>
                                                     <th scope="col">Date Disconnection</th>
-                                                    <th scope="col">Zone Book</th>
+                                                    <!-- <th scope="col">Zone Book</th> -->
                                                     <th scope="col">Status</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
@@ -101,12 +101,11 @@
                                                 <tr>
                                                     <td><?php echo $counter; ?></td>
                                                         <td><?php echo htmlspecialchars(date('F Y', strtotime($date_due))); ?></td>
-                                                        <td><?php echo htmlspecialchars(date('F d, Y', strtotime($reading_date))); ?></td>
                                                         <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_covered_from))); ?></td>
                                                         <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_covered_to))); ?></td>
                                                         <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_due))); ?></td>
                                                         <td><?php echo htmlspecialchars(date('F d, Y', strtotime($date_disconnection))); ?></td>
-                                                        <td>
+                                                        <!-- <td>
                                                             <?php 
                                                             if ($zonebook == 0) {
                                                                 echo "No Zone/Book Assigned";
@@ -121,7 +120,7 @@
                                                                 }
                                                             }
                                                             ?>
-                                                        </td>
+                                                        </td> -->
                                                     <td class="text-center">
                                                         <?php if ($set_active == 1): ?>
                                                             <span class="badge badge-success">Active</span>
@@ -145,6 +144,8 @@
                                                                 data-schedule-disconnection="<?php echo htmlspecialchars(date('F Y', strtotime($date_disconnection))); ?>">
                                                                 <i class="fa-solid fa-check"></i> Set Active
                                                             </a>
+                                                                <a class="btn btn-sm btn-success disabled" data-toggle="modal" data-target="#addReading">
+                                                            <i class="fa-solid fa-add"></i>Reading Schedule</a>
                                                             <!-- <a 
                                                                 href="#" 
                                                                 class="btn btn-sm btn-danger disabled" 
@@ -169,6 +170,12 @@
                                                                 data-schedule-disconnection="<?php echo htmlspecialchars(date('F Y', strtotime($date_disconnection))); ?>">
                                                                 <i class="fa-solid fa-check"></i> Set Active
                                                             </a>
+                                                            <a class="btn btn-sm btn-success"
+                                                                data-toggle="modal"
+                                                                data-target="#addReading"
+                                                                data-id="<?php echo $billing_schedule_id; ?>">
+                                                                <i class="fa-solid fa-add"></i> Reading Schedule
+                                                            </a>
                                                             <!-- <a 
                                                                 href="#" 
                                                                 class="btn btn-sm btn-danger delete-billing-btn" 
@@ -189,7 +196,9 @@
                                                 }
                                                 ?>
                                             </tbody>
+                                            
                                         </table>
+                                        <?php include('modal/addReading.php'); ?>
                                     </div>
                                 </div>
 
@@ -231,8 +240,32 @@
                 scrollX: true
             })
         });
+        // capuring id
+        $('#addReading').on('show.bs.modal', function (event) {
 
-        
+            let button = $(event.relatedTarget); // Button that triggered modal
+            let billingId = button.data('id');   // Get the data-id
+
+            $('#billing_schedule_id').val(billingId);
+
+            loadReadingSchedule(billingId);
+        });
+
+        $('#addReading').on('hidden.bs.modal', function () {
+            $('#readingTableBody').html('');
+        });
+
+        function loadReadingSchedule(billingId) {
+
+            $.ajax({
+                url: 'action/fetch_reading_schedule.php', // Separate PHP file
+                type: 'POST',
+                data: { billing_schedule_id: billingId },
+                success: function(response) {
+                    $('#readingTableBody').html(response); // Populate table body
+                }
+            });
+        }
 
     </script>
 
@@ -344,6 +377,87 @@
         });
     </script>
 
+    <script>
+$(document).ready(function () {
+
+    const showWarningMessage = (message) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: message
+        });
+    };
+
+    $('#addRowBtn').on('click', function (e) {
+        e.preventDefault();
+
+        var formData = $('#readingFormSchedule'); // ✅ FIXED
+        const requiredFields = formData.find('[required]');
+        let fieldsAreValid = true; // ✅ Start as TRUE
+
+        // Remove old validation styles
+        formData.find('.form-control').removeClass('is-invalid');
+
+        requiredFields.each(function () {
+
+            if ($(this).is('select') && ($(this).val() === null || $(this).val() === "")) {
+                fieldsAreValid = false;
+                $(this).addClass('is-invalid');
+                return false; // ✅ Stop loop
+            }
+
+            if ($(this).val().trim() === '') {
+                fieldsAreValid = false;
+                $(this).addClass('is-invalid');
+                return false; // ✅ Stop loop
+            }
+
+        });
+
+        if (!fieldsAreValid) {
+            showWarningMessage('Please fill-up the required fields.');
+            return;
+        }
+
+        // ✅ AJAX Submit
+        $.ajax({
+            url: 'action/add_reading.php',
+            type: 'POST',
+            data: formData.serialize(),
+            success: function (response) {
+
+                if (response.trim() === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Reading Schedule added successfully!',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        location.reload();
+                    });
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to add Reading Schedule!',
+                        text: response,
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Server Error',
+                    text: 'Please try again later.'
+                });
+            }
+        });
+
+    });
+
+});
+</script>
     <!-- Set Active -->
     <script>
         $(document).ready(function () {

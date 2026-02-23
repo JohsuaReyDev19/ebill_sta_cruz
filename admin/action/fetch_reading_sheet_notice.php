@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                 SELECT remarks, quantity, price_per_units, amount_due
                 FROM other_billing
                 WHERE meters_id = ?
-                  AND billed = 0
+                  AND billed = 1
                   AND deleted = 0
             ");
 
