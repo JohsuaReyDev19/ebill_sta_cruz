@@ -48,7 +48,7 @@ $declined = $con->query($sqlDeclined)->fetch_assoc()['total_declined'];
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
                     <div class="text-sm font-weight-bold text-primary text-uppercase mb-1">
-                        Pending Users
+                        Suspended Users
                     </div>
                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                         <?= $pending ?>

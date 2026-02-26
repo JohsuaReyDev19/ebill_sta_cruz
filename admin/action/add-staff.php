@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $first_name   = trim($_POST['first_name'] ?? '');
     $middle_name  = trim($_POST['middle_name'] ?? '');
     $last_name    = trim($_POST['last_name'] ?? '');
-    $suffix_name  = trim($_POST['suffix_name'] ?? 'N/A');
+    $suffix_name  = trim($_POST['suffix_name'] ?? '');
     $account_type = trim($_POST['accountType'] ?? 'Staff');
     $position     = trim($_POST['position'] ?? '');
 

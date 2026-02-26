@@ -105,7 +105,7 @@ $classResult = $con->query($classSql);
                                             <ul class="dropdown-menu">
                                             <?php while($c = $classResult->fetch_assoc()): ?>
                                                 <li>
-                                                    <a class="dropdown-item" href="?classification_id=<?= $c['classification_id']; ?>">
+                                                    <a class="dropdown-item" href="?classification_id=<?= $c['classification_id']; ?>&title=Account List">
                                                         <?= htmlspecialchars($c['classification']); ?>
                                                     </a>
                                                 </li>
