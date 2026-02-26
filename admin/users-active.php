@@ -215,7 +215,7 @@
                         <strong>Name:</strong> ${name}<br>
                         <strong>Username:</strong> ${username}<br>
                         <strong>Email:</strong> ${email}<br><br>
-                        Are you sure you want to delete this account?`,
+                        Are you sure you want to Suspend this account?`,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#dc3545', // Red

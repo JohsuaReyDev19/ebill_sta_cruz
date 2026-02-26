@@ -200,7 +200,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['zonebook_id'], $_POST
                     : '0.00',
                 'house_no'         => $row['house_no'],
                 'other_fees'       => $other_fees,
-                'other_total'      => number_format($other_total, 2)
+                'other_total'      => number_format($other_total, 2),
+                'classification'   =>$row['classification']
             ];
         }
 

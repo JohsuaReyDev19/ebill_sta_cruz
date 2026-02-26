@@ -6,9 +6,6 @@ let GLOBAL_COVERED_TO = '';
 
 $(document).ready(function () {
 
-    /* =====================================================
-       GENERATE TABLE
-    ===================================================== */
     $("#generateBtn").click(function (e) {
         e.preventDefault();
 
@@ -155,7 +152,8 @@ $(document).ready(function () {
             discount_amount: acc.discount_amount,
             house_no: acc.house_no,
             other_fees: acc.other_fees || [],   // new
-            other_total: acc.other_total
+            other_total: acc.other_total, 
+            classification: acc.classification
         });
     });
 
@@ -228,7 +226,7 @@ $(document).ready(function () {
                 <span class="label">Account Name</span>: ${acc.account_name}<br>
                 <span class="label">Address</span>: ${acc.barangay}, Sta. Cruz, Zambales<br>
                 <span class="label">House No.</span>: ${acc.house_no}<br>
-                <span class="label">Rate Class</span>: Residential
+                <span class="label">Rate Class</span>: ${acc.classification}
             </div>
 
             <div class="section-title">BILLING SUMMARY</div>
