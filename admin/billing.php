@@ -329,6 +329,47 @@
 
     </div>
 
+	<div class="modal fade" id="otherBillingModal" tabindex="-1">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+
+				<div class="modal-header bg-primary text-white">
+					<h5 class="modal-title">
+						Other Charges
+					</h5>
+					<button type="button" class="close" data-dismiss="modal">
+						&times;
+					</button>
+				</div>
+
+				<div class="modal-body">
+					<table class="table table-bordered table-sm" id="otherBillingTable">
+						<thead>
+							<tr>
+								<th>Select</th>
+								<th>Description</th>
+								<th>Qty</th>
+								<th>Price</th>
+								<th>Amount</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						Cancel
+					</button>
+					<button type="button" class="btn btn-success" id="confirmOtherBilling">
+						Continue Billing
+					</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 
 
     <!-- End of Page Wrapper -->

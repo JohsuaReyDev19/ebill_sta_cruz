@@ -187,44 +187,7 @@ $(document).ready(function () {
         row.find('.update-bill').removeClass('d-none');
     });
 
-    /* =========================
-       GENERATE BILL (UNBILLED)
-    ========================== */
-    $('#readingSheetTable').on('click', '.generate-bill', function () {
-
-        let row = $(this).closest('tr');
-        let input = row.find('.current-reading');
-        let currentReading = input.val();
-
-        if (!currentReading) {
-            Swal.fire('Missing Data', 'Please enter the current reading.', 'warning');
-            return;
-        }
-
-        let prev = parseFloat(input.data('prev')) || 0;
-        let consumed = (currentReading - prev).toFixed(2);
-
-        $.ajax({
-            url: 'action/save_reading.php',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                meters_id: $(this).data('account'),
-                billing_schedule_id: $('#billing_schedule_id').val(),
-                reading_date: new Date().toISOString().slice(0,10),
-                current_reading: currentReading,
-                consumed: consumed
-            },
-            success(res) {
-                if (res.success) {
-                    Swal.fire('Saved', 'Billing data saved.', 'success')
-                        .then(() => row.fadeOut());
-                } else {
-                    Swal.fire('Error', res.message, 'error');
-                }
-            }
-        });
-    });
+    
 
     /* =========================
        REGENERATE BILL (FIXED)
