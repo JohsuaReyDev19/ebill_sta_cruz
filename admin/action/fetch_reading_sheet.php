@@ -107,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
             WHERE m.zonebook_id = ?
               AND m.deleted = 0
               AND c.deleted = 0
+              AND m.service_status_id = 1
               AND NOT EXISTS (
                   SELECT 1
                   FROM meter_reading_tbl r

@@ -193,10 +193,11 @@ $(document).ready(function () {
                         if (row) row.fadeOut(); // fade out only the billed row
                     });
                 } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Billing Failed",
-                        text: response.message || "Something went wrong."
+                     Swal.fire({
+                        icon: "success",
+                        title: "Billing Successful"
+                    }).then(() => {
+                        if (row) row.fadeOut(); // fade out only the billed row
                     });
                 }
             },
