@@ -40,8 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         empty($house_no) ||
         empty($barangay)
     ) {
-        $response = ["status" => "error", "message" => "Required fields are missing."];
-        echo json_encode($response);
+        echo json_encode(["status" => "error", "message" => "Required fields are missing."]);
         exit;
     }
 
@@ -107,20 +106,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     };
 
     // ================================
-    // Generate Account Number
+    // Generate Account Number (Increment last part only)
     // ================================
-    $likePattern = "$zoneCode-$code$meterCode-%";
-    $seriesQuery = mysqli_query($con, "SELECT account_no FROM meters WHERE account_no LIKE '$likePattern' ORDER BY account_no DESC LIMIT 1");
+    $lastQuery = mysqli_query($con, "SELECT account_no FROM meters ORDER BY meters_id DESC LIMIT 1");
 
-    if (mysqli_num_rows($seriesQuery) > 0) {
-        $last       = mysqli_fetch_assoc($seriesQuery);
-        $lastSeries = intval(substr($last['account_no'], -3));
+    if(mysqli_num_rows($lastQuery) > 0){
+        $lastAccount = mysqli_fetch_assoc($lastQuery)['account_no'];
+        $parts = explode('-', $lastAccount);
+        $lastSeries = intval(end($parts));
         $newSeries  = $lastSeries + 1;
     } else {
         $newSeries = 1;
     }
 
-    $seriesCode = str_pad($newSeries, 3, '0', STR_PAD_LEFT);
+    // Auto-expand series length if > 999
+    $seriesLength = ($newSeries > 999) ? 4 : 3;
+    $seriesCode = str_pad($newSeries, $seriesLength, '0', STR_PAD_LEFT);
+
     $account_no = "$zoneCode-$code$meterCode-$seriesCode";
 
     // ================================
@@ -162,7 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_meters_id = mysqli_insert_id($con);
 
     // ================================
-    // Get Meter Details for Billing
+    // Insert Into other_billing
     // ================================
     $meter_size_query = mysqli_query($con, "SELECT meter_size, unit_price FROM meter_size_settings WHERE meter_size_id = '$meter_size_id'");
     $meter_size_row   = mysqli_fetch_assoc($meter_size_query);
@@ -178,9 +180,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $amount_due     = $unit_price;
     $description    = "Opening of new account with meter $units_included";
 
-    // ================================
-    // Insert Into other_billing
-    // ================================
     $insert_billing_sql = "INSERT INTO other_billing (
         meters_id,
         units_included,
@@ -225,3 +224,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 header('Content-Type: application/json');
 echo json_encode($response);
 mysqli_close($con);
+?>

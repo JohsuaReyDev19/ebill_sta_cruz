@@ -41,7 +41,10 @@
                                     </div>
                                     <div class="col-12 col-md-6 d-flex align-items-center justify-content-end mx-0 px-0">
                                         <div class="col-12 col-md-4 float-right mx-0 px-0">
-                                            <a data-toggle="modal" data-target="#addNew" class="btn btn-success shadow-sm w-100 h-100"><i class="fa-solid fa-plus mr-1"></i>Add Zone/Book</a>
+                                            <div class="d-flex">
+                                                <a href="manage-barangay.php?title=Manage Barangay" class="btn btn-secondary shadow-sm w-100 h-100 mr-2"><i class="fa-solid fa-plus mr-2"></i>< back</a>
+                                                <a data-toggle="modal" data-target="#addNew" class="btn btn-success shadow-sm w-100 h-100"><i class="fa-solid fa-plus mr-1"></i>Add Zone/Book</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

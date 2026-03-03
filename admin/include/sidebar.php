@@ -108,7 +108,7 @@ $system_profile = $_SESSION['system_profile'] ?? 'mmwd.png';
         <div id="systemSettingsCollapse" class="collapse">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Settings</h6>
-                <a class="collapse-item" href="zonebook-settings.php?title=Zone/Book">Zone/Book</a>
+                <!-- <a class="collapse-item" href="zonebook-settings.php?title=Zone/Book">Zone/Book</a> -->
                 <a class="collapse-item" href="account-type-settings.php?title=Account Type Settings">Account Type</a>
                 <a class="collapse-item" href="billing-schedule-settings.php">Billing Schedule</a>
                 <!-- <a class="collapse-item" href="classification-settings.php?title=Classification">Classification</a> -->

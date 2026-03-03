@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtToken->bind_param("iss", $user_id, $token, $expiry);
         $stmtToken->execute();
 
-        $resetLink = "https://stacruzwd-dev.projectbeta.net/set_password.php?token=$token";
+        $resetLink = "https://iwaterdistrict.com//set_password.php?token=$token";
 
         // ===============================
         // SEND EMAIL VIA PHPMailer

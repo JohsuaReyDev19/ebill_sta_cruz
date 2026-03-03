@@ -8,25 +8,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $zonebook_remarks = strtoupper(trim(mysqli_real_escape_string($con, $_POST['zonebook_remarks'] ?? '')));
 
     if ($zonebook === '' || $zonebook_remarks === '') {
-        echo json_encode(['status' => 'empty']);
+        echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
         exit;
     }
 
+    // Check duplicate
     $checkSql = "SELECT 1 FROM zonebook_settings WHERE zonebook = '$zonebook' LIMIT 1";
     $checkResult = mysqli_query($con, $checkSql);
 
     if (mysqli_num_rows($checkResult) > 0) {
-        echo json_encode(['status' => 'exists']);
+        echo json_encode(['status' => 'error', 'message' => 'Zone/Book already exists.']);
         exit;
     }
 
-    $sql = "INSERT INTO zonebook_settings (zonebook, zonebook_remarks)
-            VALUES ('$zonebook', '$zonebook_remarks')";
-
+    // Insert
+    $sql = "INSERT INTO zonebook_settings (zonebook, zonebook_remarks) VALUES ('$zonebook', '$zonebook_remarks')";
     if (mysqli_query($con, $sql)) {
-        echo json_encode(['status' => 'success']);
+        echo json_encode(['status' => 'success', 'message' => 'Zone/Book added successfully.']);
     } else {
-        echo json_encode(['status' => 'error']);
+        echo json_encode(['status' => 'error', 'message' => 'Failed to add Zone/Book.']);
     }
 }
 

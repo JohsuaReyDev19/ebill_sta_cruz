@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
                 ON m.concessionaires_id = c.concessionaires_id
             LEFT JOIN zonebook_settings z 
                 ON m.zonebook_id = z.zonebook_id
-            LEFT JOIN barangay_settings b 
+            LEFT JOIN barangay_settings b
                 ON c.home_barangay_id = b.barangay_id
                 AND b.deleted = 0
 

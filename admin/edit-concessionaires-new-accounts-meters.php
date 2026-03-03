@@ -78,7 +78,7 @@
                                 <!-- Card Header -->
                                 <div class="card-header py-3 d-flex flex-column flex-md-row">
                                     <div class="col-12 d-flex align-items-center justify-content-start mx-0 px-0 mb-2 mb-md-0">
-                                        <h6 class="font-weight-bold text-primary mb-0">New Account & Meter of <?php echo $full_name; echo $barangay_id?></h6>
+                                        <h6 class="font-weight-bold text-primary mb-0">New Account & Meter of <?php echo $full_name; ?></h6>
                                     </div>
                                 </div>
                                 <!-- Card Body -->
@@ -231,82 +231,59 @@
 
 															<!-- House No -->
 									                        <div class="form-group mb-3">
-									                            <label class="control-label modal-label">House No.</label>
+									                            <label class="control-label modal-label">Household No.</label>
 									                            <input type="text" class="form-control form-control-sm" name="house_no" required>
 									                            <div class="invalid-feedback">Please enter concessionaire's house no.</div>
 									                        </div>
 
 															<div class="form-group">
-																<input class="check-input-pwd" type="checkbox" name="discount" id="check-input-pwd" value="Pwd">
-																<label class="pwd-check-label font-weight-bold" for="check-input-pwd">
-																	Same as with Home Address
-																</label>
-															</div>
-															<div class="form-group" id="new_address">
-																<select class="form-control form-control-sm w-100"
-																		id="new_address"
-																		name="new_address">
+																	<input class="check-input-pwd" type="checkbox" name="discount" id="check-input-pwd" value="Pwd">
+																	<label class="pwd-check-label font-weight-bold" for="check-input-pwd">
+																		Same as with Home Address
+																	</label>
+																</div>
 
-																	<option value="" selected>-- Select Barangay --</option>
-
-																	<?php
+																<!-- Barangay Select -->
+																<div class="form-group" id="new_address_div">
+																	<label>Barangay</label>
+																	<select class="form-control form-control-sm w-100" id="new_address" name="new_address">
+																		<option value="" selected>-- Select Barangay --</option>
+																		<?php
 																		require '../db/dbconn.php';
-
-																		$query = "SELECT barangay_id, barangay 
-																				FROM barangay_settings 
-																				WHERE deleted = 0 
-																				ORDER BY barangay ASC";
-
+																		$query = "SELECT barangay_id, barangay FROM barangay_settings WHERE deleted = 0 ORDER BY barangay ASC";
 																		$result = mysqli_query($con, $query);
-
-																		if ($result) {
+																		if ($result && mysqli_num_rows($result) > 0) {
 																			while ($row = mysqli_fetch_assoc($result)) {
-																				echo '<option value="'.htmlspecialchars($row['barangay']).'">'
-																						. htmlspecialchars($row['barangay']) .
+																				echo '<option value="'.htmlspecialchars($row['barangay_id']).'">'
+																					. htmlspecialchars($row['barangay']) .
 																					'</option>';
 																			}
 																		}
-																	?>
-																</select>
-															</div>
+																		?>
+																	</select>
+																</div>
 
-															<div class="form-group d-none" id="ID_NO">
-																<input type="text" class="form-control form-control-sm" name="old_address" readonly value="<?php echo $barangay;?>">
-															</div>
-									                        <div class="invalid-feedback">Please enter concessionaire's Biling Address.</div>
+																<!-- Old Address Input (Shown if checkbox checked) -->
+																<div class="form-group d-none" id="ID_NO">
+																	<input type="text" class="form-control form-control-sm" name="old_address" readonly value="<?php echo $barangay; ?>">
+																</div>
 
-									                        <!-- Zone/Book -->
-									                        <div class="form-group mb-3">
-									                            <label class="control-label modal-label">Zone/Book</label>
-									                            
-									                            <select class="form-control custom-select custom-select-sm" name="zonebook" id="zonebook">
-									                                <option value="0" selected>Select zone/book</option>
-									                                <?php
-									                                $sqlFetchZoneBook = "SELECT * FROM zonebook_settings WHERE deleted = 0";
-									                                $resultFetchZoneBook = $con->query($sqlFetchZoneBook);
+																<!-- Zone/Book Select -->
+																<div class="form-group mb-3">
+																	<label class="control-label modal-label">Zone/Book</label>
+																	<select class="form-control custom-select custom-select-sm" name="zonebook" id="zonebook" disabled>
+																		<option value="0" selected>Select a barangay first</option>
+																	</select>
+																	<div class="invalid-feedback">Please select zone/book.</div>
+																</div>
 
-									                                if ($resultFetchZoneBook->num_rows > 0) {
-									                                    while ($rowFetchZoneBook = $resultFetchZoneBook->fetch_assoc()) {
-									                                        $zonebook_id = $rowFetchZoneBook['zonebook_id'];
-									                                        $zonebook = $rowFetchZoneBook['zonebook'];
-									                                        echo "<option value='$zonebook_id'>$zonebook</option>";
-									                                    }
-									                                } else {
-									                                    echo "<option value='none' selected disabled>No Zone/Book available</option>";
-									                                }
-									                                ?>
-									                            </select>
-
-									                            <div class="invalid-feedback">Please select zone/book.</div>
-									                        </div>
-
-															<div class="form-group mb-3" >
+															<!-- <div class="form-group mb-3" >
 									                            <label class="control-label modal-label" for="account_no">Account No</label>
 									                            <input class="form-control form-control-sm" id="account_no" name="account_no" type="text"  readonly >
 									                            <div class="invalid-feedback">
 									                                Please input a valid account no.
 									                            </div>
-									                        </div>
+									                        </div> -->
 															
 									                        <!-- Date Applied -->
 									                        <div class="form-group mb-3">
@@ -359,103 +336,145 @@
     <?php include './include/script.php'; ?>
 
 	<script>
-		$(document).ready(function () {
-			$('#check-input-pwd, #check-input-senior').on('change', function(){
-                if($(this).is(':checked')){
-                    $('#ID_NO').removeClass('d-none');
-					$('#new_address').addClass('d-none');
-                }else{
-                    $('#ID_NO').addClass('d-none');
-					$('#new_address').removeClass('d-none');
+$(document).ready(function () {
+
+    // Toggle address input based on PWD/Senior checkbox
+    $('#check-input-pwd, #check-input-senior').on('change', function(){
+        if($(this).is(':checked')){
+            $('#ID_NO').removeClass('d-none');
+            $('#new_address_div').addClass('d-none');
+            $('#zonebook')
+                .prop('disabled', true)
+                .val('0')
+                .prop('required', false)
+                .empty()
+                .append('<option value="0" selected>Select a barangay first</option>');
+        } else {
+            $('#ID_NO').addClass('d-none');
+            $('#new_address_div').removeClass('d-none');
+            $('#zonebook').prop('disabled', false).prop('required', true);
+        }
+    });
+
+    // When a barangay is selected, load its zones dynamically
+    $('#new_address').on('change', function(){
+        var barangay_id = $(this).val();
+        var $zoneSelect = $('#zonebook');
+
+        if(barangay_id){
+            $.ajax({
+                url: 'action/get_zonebook_per_barangay.php',
+                type: 'POST',
+                data: { barangay_id: barangay_id },
+                dataType: 'json',
+                success: function(zones){
+                    $zoneSelect.empty();
+
+                    if(zones.length > 0){
+                        $zoneSelect.append('<option value="0" selected>Select zone/book</option>');
+                        $.each(zones, function(i, z){
+                            $zoneSelect.append('<option value="'+z.zonebook_id+'">'+z.zonebook+'</option>');
+                        });
+                        $zoneSelect.prop('disabled', false).prop('required', true);
+                    } else {
+                        $zoneSelect.append('<option value="0" selected disabled>No zone assigned</option>');
+                        $zoneSelect.prop('disabled', true).prop('required', false);
+                    }
+                },
+                error: function(){
+                    Swal.fire('Error', 'Failed to load zones for this barangay.', 'error');
+                    $zoneSelect.empty().append('<option value="0" selected disabled>Error loading zones</option>').prop('disabled', true).prop('required', false);
                 }
             });
-			// Get the concessionaire_id from PHP
-	        const concessionaireId = <?php echo json_encode($_GET['concessionaire_id']); ?>;
+        } else {
+            $zoneSelect.empty().append('<option value="0" selected disabled>Select a barangay first</option>').prop('disabled', true).prop('required', true);
+        }
+    });
 
-		    $('#newMeterBtn').on('click', function (e) {
-		        e.preventDefault();
-		        const form = $('#newAccountForm');
-		        const requiredFields = form.find('[required]');
-		        let isValid = true;
+    // Get the concessionaire_id from PHP
+    const concessionaireId = <?php echo json_encode($_GET['concessionaire_id']); ?>;
 
-		        $('.form-control, .custom-select').removeClass('is-invalid');
+    // New Account button
+    $('#newMeterBtn').on('click', function (e) {
+        e.preventDefault();
+        const form = $('#newAccountForm');
+        const requiredFields = form.find('[required]');
+        let isValid = true;
 
-		        requiredFields.each(function () {
-		            if ($(this).val() === '' || $(this).val() === null) {
-		                isValid = false;
-		                $(this).addClass('is-invalid');
-		                Swal.fire('Incomplete Fields', 'Please fill out all required fields.', 'warning');
-		            }
-		        });
+        $('.form-control, .custom-select').removeClass('is-invalid');
 
-		        if (isValid) {
-		            $.ajax({
-		                url: 'action/add_account.php',
-		                type: 'POST',
-		                data: form.serialize(),
-		                dataType: 'json',
-		                success: function (response) {
-		                    if (response.status === 'success') {
-		                        Swal.fire({
-	                                icon: 'success',
-	                                title: 'Account Created',
-	                                text: response.message,
-	                                timer: 3000,
-	                                timerProgressBar: true,
-	                                allowOutsideClick: false,
-	                                showConfirmButton: true
-	                            }).then(() => {
-	                            	// Disable form after creation
-		                        	$('#newAccountForm').find('input, select, textarea, button').prop('disabled', true);
-	                                // Redirect to profile with dynamic ID
-	                                window.location.href = 'edit-concessionaires-accounts.php?id=' + encodeURIComponent(concessionaireId);
-	                            });
-		                    } else {
-		                        Swal.fire('Error', response.message, 'error');
-		                    }
-		                },
-		                error: function () {
-		                    Swal.fire('Request Failed', 'Something went wrong. Please try again later.', 'error');
-		                }
-		            });
-		        }
-		    });
-		});
+        requiredFields.each(function () {
+            if ($(this).val() === '' || $(this).val() === null){
+                isValid = false;
+                $(this).addClass('is-invalid');
+                Swal.fire('Incomplete Fields', 'Please fill out all required fields.', 'warning');
+            }
+        });
 
-		function updateAccountNo() {
-		const zonebook = $('#zonebook').val();
-		const meter_size = $('#meter_size').val();
-		const classification_name = $('#classification').val();
+        if (isValid) {
+            $.ajax({
+                url: 'action/add_account.php',
+                type: 'POST',
+                data: form.serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Account Created',
+                            text: response.message,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            allowOutsideClick: false,
+                            showConfirmButton: true
+                        }).then(() => {
+                            form.find('input, select, textarea, button').prop('disabled', true);
+                            window.location.href = 'edit-concessionaires-accounts.php?id=' + encodeURIComponent(concessionaireId);
+                        });
+                    } else {
+                        Swal.fire('Error', response.message, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Request Failed', 'Something went wrong. Please try again later.', 'error');
+                }
+            });
+        }
+    });
 
-		if (!zonebook || !meter_size || zonebook === '0') return;
+    // Update Account No when Zone/Book, Meter Size, or Classification changes
+    function updateAccountNo() {
+        const zonebook = $('#zonebook').val();
+        const meter_size = $('#meter_size').val();
+        const classification_name = $('#classification').val();
 
-		$.ajax({
-			url: 'action/generate_account_no.php',
-			type: 'POST',
-			data: { zonebook_id: zonebook, meter_size_id: meter_size, classification: classification_name },
-			dataType: 'json',
-			success: function(res) {
-				if (res.status === 'success') {
-					$('#account_no').val(res.account_no);
-					// $('#account_num').val(res.account_no);
-					$('#account_no_card').removeClass('d-none');
-					$('#header_account_num').removeClass('d-none');
-					$('#account_num').text(res.account_no);
-				} else {
-					Swal.fire('Error', res.message, 'error');
-				}
-			},
-			error: function() {
-				Swal.fire('Error', 'Failed to generate account number.', 'error');
-			}
-		});
-	}
+        if (!zonebook || !meter_size || zonebook === '0') return;
 
-	// Trigger when Zone/Book or Meter Size changes
-	$('#zonebook, #meter_size, #classification').on('change', updateAccountNo);
+        $.ajax({
+            url: 'action/generate_account_no.php',
+            type: 'POST',
+            data: { zonebook_id: zonebook, meter_size_id: meter_size, classification: classification_name },
+            dataType: 'json',
+            success: function(res) {
+                if (res.status === 'success') {
+                    $('#account_no').val(res.account_no);
+                    $('#account_no_card').removeClass('d-none');
+                    $('#header_account_num').removeClass('d-none');
+                    $('#account_num').text(res.account_no);
+                } else {
+                    Swal.fire('Error', res.message, 'error');
+                }
+            },
+            error: function() {
+                Swal.fire('Error', 'Failed to generate account number.', 'error');
+            }
+        });
+    }
 
+    $('#zonebook, #meter_size, #classification').on('change', updateAccountNo);
 
-	</script>
+});
+</script>
 </body>
 
 </html>

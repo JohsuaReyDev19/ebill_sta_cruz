@@ -54,7 +54,7 @@
                         <!-- Email -->
                         <div class="form-group mb-3">
                             <label class="form-label">Email</label>
-                            <input type="text" class="form-control" name="email" required>
+                            <input type="text" class="form-control" name="email">
                             <div class="invalid-feedback">Please enter concessionaire's email.</div>
                         </div>
                     </div>

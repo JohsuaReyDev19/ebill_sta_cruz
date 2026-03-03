@@ -4,7 +4,7 @@
     <hr>
     <div class="multisteps-form__content">
         <div class="row">
-            <div class="col-sm-6 col-12">
+            <div class="col-sm-12 col-12">
                 <!-- Home Address Card -->
                 <div class="card mb-3 shadow">
                     <div class="card-header bg-primary text-white">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-12">
+            <div class="col-sm-6 col-12" hidden>
                 <!-- Billing Address Card -->
                 <div class="card mb-3 shadow">
                     <div class="card-header bg-primary text-white">
@@ -72,7 +72,7 @@
                     <div class="card-body">
                         <div class="form-group mb-2">
                             <div class="form-check">
-                                <input class="form-check-input" name="sameAddressCheck" type="checkbox" value="yes" id="sameAddressCheck">
+                                <input class="form-check-input" name="sameAddressCheck" type="checkbox" value="yes" id="sameAddressCheck" checked>
                                 <label class="form-check-label" for="sameAddressCheck">
                                     Same as Home Address
                                 </label>
