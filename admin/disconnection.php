@@ -1,18 +1,14 @@
 <?php
 require '../db/dbconn.php';
 
-/* ===============================
-   CLASSIFICATION FILTER
-=================================*/
+
 $classificationFilter = '';
 if (isset($_GET['classification_id']) && $_GET['classification_id'] !== '') {
     $classification_id = intval($_GET['classification_id']);
     $classificationFilter = " AND m.classification_id = $classification_id ";
 }
 
-/* ===============================
-   MONTHS FILTER
-=================================*/
+
 $monthsFilter = '';
 if (isset($_GET['months']) && $_GET['months'] !== '') {
     $months = intval($_GET['months']);
@@ -25,9 +21,6 @@ if (isset($_GET['months']) && $_GET['months'] !== '') {
     }
 }
 
-/* ===============================
-   OVERDUE ACCOUNTS QUERY
-=================================*/
 $sql = "
 SELECT 
     m.meters_id,
@@ -37,7 +30,7 @@ SELECT
         c.last_name, ', ',
         c.first_name, ' ',
         IFNULL(c.middle_name, ''),
-        IF(TRIM(c.suffix_name) = '' OR TRIM(c.suffix_name) = 'NA', '', CONCAT(' ', c.suffix_name))
+        IF(TRIM(c.suffix_name) = '' OR TRIM(c.suffix_name) = 'NA', '', CONCAT(' ', c.suffix-name))
     ) AS account_name,
 
     GROUP_CONCAT(
@@ -72,9 +65,7 @@ SELECT
 
 $result = $con->query($sql);
 
-/* ===============================
-   CLASSIFICATION DROPDOWN
-=================================*/
+
 $classSql = "SELECT * FROM classification_settings WHERE deleted = 0";
 $classResult = $con->query($classSql);
 ?>
@@ -130,20 +121,20 @@ $classResult = $con->query($classSql);
                                         </div>
 
                                         <!-- Zone Dropdown -->
-                                        <div class="dropdown mr-2">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button"
-                                                id="userStatusDropdown"
-                                                data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                Zone
-                                            </button>
-
-                                            <ul class="dropdown-menu" aria-labelledby="userStatusDropdown">
-                                                <li><a class="dropdown-item" href="showAll.php">Show All</a></li>
-                                                <li><a class="dropdown-item" href="#">Zone</a></li>
-                                                <li><a class="dropdown-item" href="#">Barangay</a></li>
-                                            </ul>
-                                        </div>
+                                        <div class="col-12 col-md-4 float-right mx-0 px-0 mr-2">
+											<select class="form-control form-control-sm w-100"
+													name="zonebook_id"
+													id="zonebook_id">
+												<option value="" selected disabled>Select zone/book</option>
+												<?php
+												$result = $con->query("SELECT * FROM zonebook_settings WHERE deleted = 0");
+												while ($row = $result->fetch_assoc()) {
+													echo "<option value='{$row['zonebook_id']}'>{$row['zonebook']}</option>";
+												}
+												?>
+												<option value="0">Accounts with no Zone/Book Assigned</option>
+											</select>
+										</div>
 
                                         <div class="col-12 col-md-4 float-right mx-0 px-0">
                                             <button type="button"

@@ -16,7 +16,7 @@
         <ul class="dropdown-menu" aria-labelledby="userStatusDropdown">
             <li><a class="dropdown-item" href="users-active.php?title=Manage Active Users">Active</a></li>
             <!-- <li><a class="dropdown-item" href="users-pending.php?title=Manage Pending Users">Suspend</a></li> -->
-            <li><a class="dropdown-item" href="users-archived.php?title=Manage Archived Users">Suspend</a></li>
+            <li><a class="dropdown-item" href="users-archived.php?title=Manage Archived Users">Suspended</a></li>
         </ul>
     </div>
 </div>
