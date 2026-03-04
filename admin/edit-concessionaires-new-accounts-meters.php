@@ -224,14 +224,14 @@
 
 									                        <!-- Meter No -->
 									                        <div class="form-group mb-3">
-									                            <label class="control-label modal-label">Meter No.</label>
-									                            <input type="text" class="form-control form-control-sm" name="meter_no" required>
+									                            <label class="control-label modal-label">Meter No. -- optional --</label>
+									                            <input type="text" class="form-control form-control-sm" name="meter_no">
 									                            <div class="invalid-feedback">Please enter concessionaire's meter no.</div>
 									                        </div>
 
 															<!-- House No -->
 									                        <div class="form-group mb-3">
-									                            <label class="control-label modal-label">Household No.</label>
+									                            <label class="control-label modal-label">Household No. -- optional --</label>
 									                            <input type="text" class="form-control form-control-sm" name="house_no" required>
 									                            <div class="invalid-feedback">Please enter concessionaire's house no.</div>
 									                        </div>

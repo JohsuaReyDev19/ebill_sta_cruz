@@ -78,6 +78,15 @@ $system_profile = $_SESSION['system_profile'] ?? 'mmwd.png';
     </li>
     <?php endif; ?>
 
+    <?php if($role == 1 || ($role == 2 && $perm['Disconnection'] == 1)) : ?>
+    <li class="nav-item">
+        <a class="nav-link collapsed fs-4" href="disconnection?title=Disconnection">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-off-icon lucide-cloud-off"><path d="M10.94 5.274A7 7 0 0 1 15.71 10h1.79a4.5 4.5 0 0 1 4.222 6.057"/><path d="M18.796 18.81A4.5 4.5 0 0 1 17.5 19H9A7 7 0 0 1 5.79 5.78"/><path d="m2 2 20 20"/></svg>
+            <span>Disconnection</span>
+        </a>
+    </li>
+    <?php endif; ?>
+
     <!-- Accounting System -->
     <?php if($role == 1 || ($role == 2 && $perm['accounting_system'] == 1)) : ?>
     <li class="nav-item">

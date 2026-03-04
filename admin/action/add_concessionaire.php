@@ -117,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $id_number = mysqli_real_escape_string($con, $_POST['id_number'] ?? '');
 
             // ✅ FIXED CHECKBOX HANDLING (0 or 1)
-            $discount = isset($_POST['discount']) ? 'Pwd' : NULL;
+            $discount = isset($_POST['discount']) ? 'SC/PWD/NAAC/MOV/MP' : NULL;
 
             $sql_concessionaire = "INSERT INTO concessionaires (
                 last_name, first_name, middle_name, suffix_name, gender,

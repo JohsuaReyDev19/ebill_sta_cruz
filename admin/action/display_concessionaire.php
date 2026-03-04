@@ -8,7 +8,7 @@ $start = $_POST['start'];
 $length = $_POST['length'];
 $searchValue = $_POST['search']['value'];
 
-// Build base query
+// Base query (NO ORDER YET)
 $query = "
     SELECT 
         ct.*, 
@@ -19,36 +19,69 @@ $query = "
         CONCAT(ctms_home.citytownmunicipality, ', ', bs_home.barangay) AS home_address, 
         CONCAT(ctms_billing.citytownmunicipality, ', ', bs_billing.barangay) AS billing_address,
         GROUP_CONCAT(m.account_no SEPARATOR ', ') AS accounts_info
-    FROM `concessionaires` ct
-    INNER JOIN `citytownmunicipality_settings` ctms_home ON ctms_home.citytownmunicipality_id = ct.home_citytownmunicipality_id
-    INNER JOIN `barangay_settings` bs_home ON bs_home.barangay_id = ct.home_barangay_id
-    INNER JOIN `citytownmunicipality_settings` ctms_billing ON ctms_billing.citytownmunicipality_id = ct.billing_citytownmunicipality_id
-    INNER JOIN `barangay_settings` bs_billing ON bs_billing.barangay_id = ct.billing_barangay_id
-    LEFT JOIN `meters` m ON m.concessionaires_id = ct.concessionaires_id AND m.deleted = 0
+
+    FROM concessionaires ct
+
+    INNER JOIN citytownmunicipality_settings ctms_home 
+        ON ctms_home.citytownmunicipality_id = ct.home_citytownmunicipality_id
+
+    INNER JOIN barangay_settings bs_home 
+        ON bs_home.barangay_id = ct.home_barangay_id
+
+    INNER JOIN citytownmunicipality_settings ctms_billing 
+        ON ctms_billing.citytownmunicipality_id = ct.billing_citytownmunicipality_id
+
+    INNER JOIN barangay_settings bs_billing 
+        ON bs_billing.barangay_id = ct.billing_barangay_id
+
+    LEFT JOIN meters m 
+        ON m.concessionaires_id = ct.concessionaires_id 
+        AND m.deleted = 0
+
     WHERE ct.deleted = 0
 ";
 
-// Add search functionality
+// ✅ Search Filter
 if (!empty($searchValue)) {
-    $query .= " AND (CONCAT(ct.first_name, ' ', ct.middle_name, ' ', ct.last_name) LIKE '%$searchValue%' OR 
-                     bs_home.barangay LIKE '%$searchValue%' OR 
-                     bs_billing.barangay LIKE '%$searchValue%' OR 
-                     m.account_no LIKE '%$searchValue%')";
+    $searchValue = mysqli_real_escape_string($con, $searchValue);
+
+    $query .= "
+        AND (
+            CONCAT(ct.last_name, ', ', ct.first_name, ' ', ct.middle_name) LIKE '%$searchValue%' OR
+            ct.institution_name LIKE '%$searchValue%' OR
+            bs_home.barangay LIKE '%$searchValue%' OR
+            bs_billing.barangay LIKE '%$searchValue%' OR
+            m.account_no LIKE '%$searchValue%'
+        )
+    ";
 }
 
-// Group by concessionaire and order
-$query .= " GROUP BY ct.concessionaires_id ORDER BY ct.date_added ASC";
+// ✅ Group By (required for GROUP_CONCAT)
+$query .= " GROUP BY ct.concessionaires_id ";
 
-// Add limit and offset for pagination
+// ✅ ORDER BY FULL NAME ASC (Proper Implementation)
+$query .= "
+    ORDER BY 
+        CASE 
+            WHEN ct.is_institution = 1 THEN ct.institution_name
+            ELSE CONCAT(ct.last_name, ', ', ct.first_name, ' ', ct.middle_name)
+        END ASC
+";
+
+// ✅ Pagination
 $query .= " LIMIT $start, $length";
 
+// Execute Query
 $result = mysqli_query($con, $query);
+
 $data = [];
 
 while ($row = mysqli_fetch_assoc($result)) {
+
     $profileImagePath = "../upload/profile/" . $row['profile'];
     $concessionaires_id = $row['concessionaires_id'];
     $encryptedData = openssl_encrypt($concessionaires_id, 'aes-256-cbc', $encryptionKey, 0, $iv);
+
     $data[] = [
         'profile' => '
             <div class="d-flex justify-content-center align-items-center">
@@ -75,17 +108,20 @@ while ($row = mysqli_fetch_assoc($result)) {
     ];
 }
 
-// Get total records count
+// ✅ Total Records
 $totalRecordsQuery = "
     SELECT COUNT(DISTINCT ct.concessionaires_id) AS total 
-    FROM `concessionaires` ct
-    LEFT JOIN `meters` m ON m.concessionaires_id = ct.concessionaires_id AND m.deleted = 0
+    FROM concessionaires ct
+    LEFT JOIN meters m 
+        ON m.concessionaires_id = ct.concessionaires_id 
+        AND m.deleted = 0
     WHERE ct.deleted = 0
 ";
+
 $totalRecordsResult = mysqli_query($con, $totalRecordsQuery);
 $totalRecords = mysqli_fetch_assoc($totalRecordsResult)['total'];
 
-// Prepare JSON response for DataTables
+// Response for DataTables
 $response = [
     "draw" => intval($draw),
     "recordsTotal" => $totalRecords,
@@ -95,7 +131,5 @@ $response = [
 
 echo json_encode($response);
 
-// Close the database connection
 mysqli_close($con);
 ?>
-

@@ -47,13 +47,13 @@
                     <div class="card-body">
                         <!-- Contact No -->
                         <div class="form-group mb-3">
-                            <label class="form-label">Contact No.</label>
-                            <input type="text" class="form-control" id="contactInput" name="contact_no" required>
+                            <label class="form-label">Contact No. -- optional --</label>
+                            <input type="text" class="form-control" id="contactInput" name="contact_no">
                             <div class="invalid-feedback">Please enter concessionaire's contact no.</div>
                         </div>
                         <!-- Email -->
                         <div class="form-group mb-3">
-                            <label class="form-label">Email</label>
+                            <label class="form-label">Email -- optional --</label>
                             <input type="text" class="form-control" name="email">
                             <div class="invalid-feedback">Please enter concessionaire's email.</div>
                         </div>
