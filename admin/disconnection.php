@@ -30,7 +30,7 @@ SELECT
         c.last_name, ', ',
         c.first_name, ' ',
         IFNULL(c.middle_name, ''),
-        IF(TRIM(c.suffix_name) = '' OR TRIM(c.suffix_name) = 'NA', '', CONCAT(' ', c.suffix-name))
+        IF(TRIM(c.suffix_name) = '' OR TRIM(c.suffix_name) = 'NA', '', CONCAT(' ', c.suffix_name))
     ) AS account_name,
 
     GROUP_CONCAT(
